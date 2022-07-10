@@ -1,0 +1,10 @@
+version: "3"
+services:
+  # web:
+  # build:
+  python3:
+    restart: always
+    build: .
+    container_name: "spatial-data-container"
+    working_dir: "/"
+    tty: true
