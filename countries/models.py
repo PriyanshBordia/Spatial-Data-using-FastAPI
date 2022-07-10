@@ -10,7 +10,7 @@ class Country(models.Model):
     geom = models.PolygonField()
 
     class Meta:
-        db_table = 'polygon'
+        db_table = "polygon"
         managed = False
-        verbose_name = 'polygon'
-        verbose_name_plural = 'polygons'
+        verbose_name = "polygon"
+        verbose_name_plural = "polygons"
