@@ -79,14 +79,14 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
     # django.contrib.gis.db.backends.spatialite
-	'prod': {
-		'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    'prod': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('DB_NAME'),
-		'USERNAME': os.getenv('DB_USERNAME'),
-		'PASSWORD': os.getenv('DB_PASSWORD'),
-		'PORT': os.getenv('DB_PORT'),
-		'HOST': os.getenv('DB_HOSTNAME'),
-	}
+        'USERNAME': os.getenv('DB_USERNAME'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'PORT': os.getenv('DB_PORT'),
+        'HOST': os.getenv('DB_HOSTNAME'),
+    }
 }
 
 
