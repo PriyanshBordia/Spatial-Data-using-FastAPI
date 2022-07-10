@@ -1,9 +1,8 @@
-from fastapi import FastAPI
-
-from pydantic import BaseModel
-
 from config import settings
 from db.sessions import session
+from fastapi import FastAPI
+from pydantic import BaseModel
+
 
 class Country(BaseModel):
     ogc_fid: int
@@ -22,5 +21,5 @@ async def home():
 
 @app.get("/countries")
 async def get_all_countries():
-	countries = Country.objects.all()
-	return {"countries": countries}
+    countries = Country.objects.all()
+    return {"countries": countries}
