@@ -1,11 +1,12 @@
 # Spatial Data using FastAPI
- 
 
 ```
 ~ python encode.py [docker_username] [docker_password]
 
 ```
+
 ### Steps
+
 ```
 ~ docker login # Add credentials to prompt
 ~ docker pull python
@@ -16,16 +17,17 @@
 ```
 
 ### Populate data to local db
+
 ```
 ~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln polygon
 ```
 
 #### ALIAS
+
 - image_name = spatial-data
-- tag_name = unique name given to 
+- tag_name = unique name given to
 - username = PostgreSQL account username
 - password = PostgreSQL account password
-
 
 ### Notes
 
