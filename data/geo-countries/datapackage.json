@@ -12,11 +12,7 @@
   "hash": "6b1a94ce4afe069aeda59cd5e824d5be",
   "homepage": "http://github.com/datasets/geo-countries",
   "id": "core/geo-countries",
-  "keywords": [
-    "geodata",
-    "vector",
-    "country"
-  ],
+  "keywords": ["geodata", "vector", "country"],
   "licenses": [
     {
       "type": "ODC-PDDL",
