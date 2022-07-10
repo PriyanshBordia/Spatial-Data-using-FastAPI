@@ -5,7 +5,7 @@ import sys
 def main() -> str:
 
     if len(sys.argv) != 3:
-        return ("~ python encode.py [username] [password]")
+        return "~ python encode.py [username] [password]"
 
     base = str(sys.argv[1]) + ":" + str(sys.argv[2])
     return base64.b64encode(base.encode("utf-8")).decode("utf-8")
