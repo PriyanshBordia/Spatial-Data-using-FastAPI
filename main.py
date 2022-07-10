@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from models import Country
 
 app = FastAPI()
