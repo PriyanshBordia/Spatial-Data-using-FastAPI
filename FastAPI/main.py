@@ -1,9 +1,7 @@
-from fastapi import FastAPI
-
-from pydantic import BaseModel
-
 from config import settings
 from db.sessions import session
+from fastapi import FastAPI
+from pydantic import BaseModel
 
 
 class Country(BaseModel):
