@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Country(BaseModel):
     ogc_fid: int
     admin: str
