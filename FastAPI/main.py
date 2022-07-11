@@ -6,6 +6,7 @@ from fastapi import FastAPI
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
 db = session
 
+
 @app.get("/")
 async def home():
     return {"message": "API is fast.."}
