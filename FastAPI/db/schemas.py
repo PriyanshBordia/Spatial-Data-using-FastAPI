@@ -5,4 +5,4 @@ class Country(BaseModel):
     ogc_fid: int
     admin: str
     iso_a3: str
-    geom: str
+    geom: list
