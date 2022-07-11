@@ -1,7 +1,7 @@
 from config import settings
+from db.schemas import Country
 from db.sessions import session
 from fastapi import FastAPI
-from db.schemas import Country
 
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
 
