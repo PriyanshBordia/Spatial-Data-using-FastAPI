@@ -34,8 +34,9 @@
 - When and where to use `def` and `async`.
 
 ##### References
- - [Tutorial](https://www.fastapitutorial.com/)
- - [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
+
+- [Tutorial](https://www.fastapitutorial.com/)
+- [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
 
 ##### Todo
 
