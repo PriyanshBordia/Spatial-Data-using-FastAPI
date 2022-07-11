@@ -4,7 +4,7 @@ from db.sessions import session
 from fastapi import FastAPI
 
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
-
+db = session
 
 @app.get("/")
 async def home():
@@ -13,5 +13,4 @@ async def home():
 
 @app.get("/countries")
 async def get_all_countries():
-    countries = Country()
-    return {"countries": countries}
+    return {"countries": "A list of countries"}

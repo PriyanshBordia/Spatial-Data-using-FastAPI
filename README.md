@@ -29,6 +29,11 @@
 - username = PostgreSQL account username
 - password = PostgreSQL account password
 
-### Notes
+##### Notes
 
 - When and where to use `def` and `async`.
+
+
+##### Todo
+- [ ] Oauth2 using JWT
+- []
