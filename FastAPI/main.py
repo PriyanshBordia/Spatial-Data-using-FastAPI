@@ -1,15 +1,7 @@
 from config import settings
 from db.sessions import session
 from fastapi import FastAPI
-from pydantic import BaseModel
-
-
-class Country(BaseModel):
-    ogc_fid: int
-    admin: str
-    iso_a3: str
-    geom: list
-
+from db.schemas import Country
 
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
 
@@ -21,5 +13,5 @@ async def home():
 
 @app.get("/countries")
 async def get_all_countries():
-    countries = Country.objects.all()
+    countries = Country()
     return {"countries": countries}
