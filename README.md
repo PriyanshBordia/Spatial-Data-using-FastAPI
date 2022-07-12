@@ -2,7 +2,6 @@
 
 ```
 ~ python encode.py [docker_username] [docker_password]
-
 ```
 
 ### Steps
@@ -38,6 +37,6 @@
  - [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
 
 ##### Todo
-
-- [ ] Oauth2 using JWT
-- []
+- [X] Adding Tests
+- [X] Oauth2 using JWT
+- [X] Adding Checks

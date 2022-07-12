@@ -5,7 +5,7 @@ class Settings:
     PROJECT_NAME: str = "Spatial Data"
     PROJECT_VERSION: str = "1.0.0.0"
 
-    POSTGRES_USER: str = str(os.getenv("DB_USER"))
+    POSTGRES_USER: str = str(os.getenv("DB_USERNAME"))
     POSTGRES_PASSWORD: str = str(os.getenv("DB_PASSWORD"))
     POSTGRES_SERVER: str = str(os.getenv("DB_HOST"))
     POSTGRES_PORT: int = int(os.getenv("DB_PORT", 5432))
