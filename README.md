@@ -33,10 +33,12 @@
 - When and where to use `def` and `async`.
 
 ##### References
- - [Tutorial](https://www.fastapitutorial.com/)
- - [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
+
+- [Tutorial](https://www.fastapitutorial.com/)
+- [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
 
 ##### Todo
-- [X] Adding Tests
-- [X] Oauth2 using JWT
-- [X] Adding Checks
+
+- [x] Adding Tests
+- [x] Oauth2 using JWT
+- [x] Adding Checks
