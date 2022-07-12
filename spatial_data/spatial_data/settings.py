@@ -21,19 +21,21 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = []
 
 # Application definition
 
 INSTALLED_APPS = [
+	"countries.apps.CountriesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+	"django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -125,6 +127,6 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-SPATIALITE_LIBRARY_PATH = "/usr/local/lib/mod_spatialite.dylib"
-GDAL_LIBRARY_PATH = "/home/sue/local/lib/libgdal.so"
-GEOS_LIBRARY_PATH = "/home/bob/local/lib/libgeos_c.so"
+# SPATIALITE_LIBRARY_PATH = "/usr/local/lib/mod_spatialite.dylib"
+# GDAL_LIBRARY_PATH = "/home/sue/local/lib/libgdal.so"
+# GEOS_LIBRARY_PATH = "/home/bob/local/lib/libgeos_c.so"
