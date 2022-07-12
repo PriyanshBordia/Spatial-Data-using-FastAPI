@@ -5,10 +5,10 @@ from django.contrib.gis.db import models
 
 class Country(models.Model):
 
-    ogc_fid = model.IntegerField()
-    admin = models.CharField()
-    iso_a3 = models.CharField()
-    geom = models.PolygonField()
+	ogc_fid = models.IntegerField()
+	admin = models.CharField(max_length=255)
+	iso_a3 = models.CharField(max_length=255)
+	geom = models.PolygonField()
 
     class Meta:
         db_table = "polygon"
