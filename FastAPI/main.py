@@ -1,8 +1,7 @@
+from config import settings
+from db import crud, models, schemas, sessions
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-
-from config import settings
-from db import models, schemas, sessions, crud
 
 models.Base.metadata.create_all(bind=sessions.engine)
 

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, PickleType
+from sqlalchemy import Column, Integer, PickleType, String
+
 from .sessions import Base
 
 

@@ -1,6 +1,5 @@
-from sqlalchemy.orm import Session
-
 from db import models, schemas
+from sqlalchemy.orm import Session
 
 
 def get_country_by_admin(db: Session, admin: str):
