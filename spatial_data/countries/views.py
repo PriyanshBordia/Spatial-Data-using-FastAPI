@@ -4,4 +4,6 @@ from django.shortcuts import render
 
 
 def home(request):
-	return render(request, "countries/home.html", context={"status": "All good."})
+    return render(request,
+                  "countries/home.html",
+                  context={"status": "All good."})
