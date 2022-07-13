@@ -1,9 +1,10 @@
 import json
-from django.shortcuts import render
-from django.contrib.gis.geos import MultiPolygon, Polygon
+
 from django.contrib import messages
-from termcolor import cprint
+from django.contrib.gis.geos import MultiPolygon, Polygon
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from termcolor import cprint
 
 from .forms import UploadForm
 from .models import Country
