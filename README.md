@@ -18,7 +18,7 @@
 ### Populate data to local db
 
 ```
-~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln polygon
+~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln spatial_data
 ```
 
 #### ALIAS
