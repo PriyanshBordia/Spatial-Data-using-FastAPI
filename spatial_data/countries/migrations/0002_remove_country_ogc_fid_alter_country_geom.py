@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='country',
             name='geom',
-            field=django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326),
+            field=django.contrib.gis.db.models.fields.MultiPolygonField(
+                srid=4326),
         ),
     ]
