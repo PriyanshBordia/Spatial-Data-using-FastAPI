@@ -26,6 +26,14 @@ async def home():
     return {"message": "API is fast.."}
 
 
+@app.get("/countries", response_model=schemas.Country)
+async def get_all_countries(db: Session = Depends(get_db)):
+    countries = crud.get_countries(db)
+    if countries is None:
+        return HTTPException(status_code=404, detail="Country not Found.")
+    return countries
+
+
 @app.get("/country/{admin}", response_model=schemas.Country)
 async def get_all_countries(admin: str, db: Session = Depends(get_db)):
     country = crud.get_country_by_admin(db, admin)
