@@ -1,16 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- countries/upload.html -->
+{% extends "base.html" %}
+
+{% block title %}
+	Upload
+{% endblock %}
+
+{% block head %}
 	{% load static %}
-	{% block head %}
-	{% endblock %}
-	<!-- Icon -->
-	<title>{% block title %}{% endblock %}</title>
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
+	<form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+
+		{{ form.as_ul }}
+
+		<input type="submit" value="Upload"></button>
+	</form>
+
 	{% for message in messages %}
 		<div class="container-fluid p-0">
 			<div class="alert {{ message.tags }} alert-dismissible" role="alert">
@@ -29,8 +36,4 @@
 			</div>
 		</div>
 	{% endfor %}
-	{% block body %}
-	{% endblock %}
-	<script></script>
-</body>
-</html>
+{% endblock %}

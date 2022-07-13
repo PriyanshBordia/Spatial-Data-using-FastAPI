@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+   	"django.contrib.gis",
     "django_extensions",
 ]
 
@@ -73,10 +74,10 @@ WSGI_APPLICATION = "spatial_data.wsgi.application"
 
 DATABASES = {
     # "default": {
-        # "ENGINE": "django.db.backends.sqlite3",
+        # "ENGINE": "django.contrib.gis.db.backends.spatialite",
         # "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     # },
-    # django.contrib.gis.db.backends.spatialite
+	
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.getenv("DB_NAME"),
