@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ ENV DB_HOST 127.0.0.1
 
 COPY ./requirements.txt /usr/src/app/requirements.txt
 
-RUN pip install -r /usr/src/app/requirements.txt
+RUN pip install --upgrade pip && pip install -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip
 
 COPY . /usr/src/app/
 
