@@ -7,4 +7,4 @@ class UploadForm(forms.ModelForm):
 
     class Meta:
         model = Country
-        fields = ['geojson_file']
+        fields = ["geojson_file"]

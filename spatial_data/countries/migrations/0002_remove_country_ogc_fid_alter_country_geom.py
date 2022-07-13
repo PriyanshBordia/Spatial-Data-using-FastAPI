@@ -7,18 +7,17 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('countries', '0001_initial'),
+        ("countries", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='country',
-            name='ogc_fid',
+            model_name="country",
+            name="ogc_fid",
         ),
         migrations.AlterField(
-            model_name='country',
-            name='geom',
-            field=django.contrib.gis.db.models.fields.MultiPolygonField(
-                srid=4326),
+            model_name="country",
+            name="geom",
+            field=django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326),
         ),
     ]

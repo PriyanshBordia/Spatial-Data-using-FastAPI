@@ -8,19 +8,25 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Country',
+            name="Country",
             fields=[
-                ('id', models.BigAutoField(auto_created=True,
-                 primary_key=True, serialize=False, verbose_name='ID')),
-                ('ogc_fid', models.IntegerField()),
-                ('admin', models.CharField(max_length=255)),
-                ('iso_a3', models.CharField(max_length=255)),
-                ('geom', django.contrib.gis.db.models.fields.PolygonField(srid=4326)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("ogc_fid", models.IntegerField()),
+                ("admin", models.CharField(max_length=255)),
+                ("iso_a3", models.CharField(max_length=255)),
+                ("geom", django.contrib.gis.db.models.fields.PolygonField(srid=4326)),
             ],
         ),
     ]
