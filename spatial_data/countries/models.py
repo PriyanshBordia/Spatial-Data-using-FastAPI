@@ -5,12 +5,12 @@ from django.contrib.gis.db import models
 
 class Country(models.Model):
 
-    admin = models.CharField()
-    iso_a3 = models.CharField()
-    geom = models.PolygonField()
+    admin = models.CharField(max_length=255, blank=False, null=False)
+    iso_a3 = models.CharField(max_length=255, blank=False, null=False)
+    geom = models.MultiPolygonField(blank=False, null=False)
+
+    def __str__(self):
+        return f"{self.id}. {self.admin} {self.iso_a3}"
 
     class Meta:
-        db_table = "polygon"
-        managed = False
-        verbose_name = "polygon"
-        verbose_name_plural = "polygons"
+        ordering = ["admin"]
