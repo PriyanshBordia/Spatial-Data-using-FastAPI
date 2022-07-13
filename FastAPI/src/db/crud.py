@@ -1,11 +1,9 @@
-from db import models
-from db import schemas
+from src.db import models, schemas
 from sqlalchemy.orm import Session
-
 
 def get_countries(db: Session):
 	try:
-		return db.query(models.Country).all()
+		return db.query(models.Country)
 	except Exception as e:
 		raise e
 
