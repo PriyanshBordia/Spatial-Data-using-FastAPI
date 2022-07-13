@@ -1,7 +1,8 @@
 import json
 
 from django.contrib import messages
-from django.contrib.gis.geos import MultiPolygon, Polygon
+from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.geos import Polygon
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from termcolor import cprint
