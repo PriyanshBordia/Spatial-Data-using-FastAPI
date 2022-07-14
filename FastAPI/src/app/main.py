@@ -1,10 +1,15 @@
 from curses.ascii import HT
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends
+from fastapi import FastAPI
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from termcolor import cprint
 
-from ..db import crud, models, schemas, sessions
+from ..db import crud
+from ..db import models
+from ..db import schemas
+from ..db import sessions
 from .config import settings
 
 # models.Base.metadata.create_all(bind=sessions.engine)
