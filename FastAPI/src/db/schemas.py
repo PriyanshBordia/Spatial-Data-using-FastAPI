@@ -2,10 +2,10 @@ from pydantic import BaseModel
 
 
 class Country(BaseModel):
-	id: int
-	admin: str
-	iso_a3: str
-	geom: str
+    id: int
+    admin: str
+    iso_a3: str
+    geom: str
 
-	class Config:
-		orm_mode = True
+    class Config:
+        orm_mode = True

@@ -16,7 +16,7 @@ RUN pip install virtualenv
 RUN python -m venv venv
 RUN source /usr/src/venv/bin/activate
 RUN pip install --upgrade pip
-RUN pip install -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip 
+RUN pip install -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip
 
 COPY . /usr/src/app/
 
