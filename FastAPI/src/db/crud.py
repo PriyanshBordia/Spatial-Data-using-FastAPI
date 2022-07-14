@@ -28,7 +28,8 @@ def get_country_by_id(db: Session, id: int):
 def get_country_by_code(db: Session, code: str):
     try:
         # return db.execute("SELECT * FROM countries_country WHERE iso_a3 = :code", {"code": code}).fetchall()
-        return db.query(models.Country).filter(models.Country.iso_a3 == code).all()
+        return db.query(
+            models.Country).filter(models.Country.iso_a3 == code).all()
     except Exception as e:
         raise e
 
@@ -36,7 +37,8 @@ def get_country_by_code(db: Session, code: str):
 def get_country_by_name(db: Session, name: str):
     try:
         # return db.execute("SELECT * FROM countries_country WHERE admin = :name", {"name": name}).fetchall()
-        return db.query(models.Country).filter(models.Country.admin == name).all()
+        return db.query(
+            models.Country).filter(models.Country.admin == name).all()
     except Exception as e:
         raise e
 
@@ -49,13 +51,9 @@ def get_neighboring_countries(db: Session, country: schemas.Country):
 def get_countries(db: Session):
     try:
         # return db.execute("SELECT * FROM countries_country").fetchall()
-        return (
-            db.query(models.Country)
-            .with_entities(
-                models.Country.id, models.Country.admin, models.Country.iso_a3
-            )
-            .all()
-        )
+        return (db.query(models.Country).with_entities(
+            models.Country.id, models.Country.admin,
+            models.Country.iso_a3).all())
     except Exception as e:
         raise e
 
