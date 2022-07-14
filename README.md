@@ -35,6 +35,7 @@
 ##### References
 
 - [Tutorial](https://www.fastapitutorial.com/)
+- [Docker](https://testdriven.io/blog/fastapi-crud/)
 - [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
 
 ##### Todo

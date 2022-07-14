@@ -5,7 +5,7 @@ class Country(BaseModel):
 	id: int
 	admin: str
 	iso_a3: str
-	geom: list
+	geom: str
 
 	class Config:
 		orm_mode = True

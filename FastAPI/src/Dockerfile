@@ -12,7 +12,11 @@ ENV DB_HOST 127.0.0.1
 
 COPY ./requirements.txt /usr/src/app/requirements.txt
 
-RUN pip install --upgrade pip && pip install -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip
+RUN pip install virtualenv
+RUN python -m venv venv
+RUN source /usr/src/venv/bin/activate
+RUN pip install --upgrade pip
+RUN pip install -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip 
 
 COPY . /usr/src/app/
 
