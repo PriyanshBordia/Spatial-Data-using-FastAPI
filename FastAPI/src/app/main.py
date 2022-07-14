@@ -1,5 +1,3 @@
-from curses.ascii import HT
-
 from fastapi import Depends
 from fastapi import FastAPI
 from fastapi import HTTPException
