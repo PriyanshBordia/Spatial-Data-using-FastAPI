@@ -11,6 +11,7 @@ def test_home():
     assert response.status_code == 200
     assert response.json() == {"message": "API is fast.."}
 
+
 """
 {
   "id": 256,
