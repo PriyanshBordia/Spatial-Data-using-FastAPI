@@ -81,7 +81,8 @@ async def get_country_name(name: str, db: Session = Depends(get_db)):
 
 
 @app.post("/country/create/")
-async def create_country(country: schemas.CountryCreate, db: Session = Depends(get_db)):
+async def create_country(country: schemas.CountryCreate,
+                         db: Session = Depends(get_db)):
     try:
         if not crud.get_country_by_id(db, country.id):
             crud.insert_country(db, country)
@@ -94,14 +95,16 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 
 
 @app.put("/country/update/")
-async def update_country(country: schemas.CountryCreate, db: Session = Depends(get_db)):
+async def update_country(country: schemas.CountryCreate,
+                         db: Session = Depends(get_db)):
     try:
         if crud.get_country_by_id(db, country.id):
             crud.update_country(db, country)
             response = crud.format_response(data=[country])
             return response
         else:
-            return HTTPException(status_code=404, detail="Country does not exist.")
+            return HTTPException(status_code=404,
+                                 detail="Country does not exist.")
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
 
@@ -111,8 +114,10 @@ async def delete_country(id: int, db: Session = Depends(get_db)):
     try:
         if crud.get_country_by_id(db, country.id):
             crud.delete_country(db, country)
-            return HttpResponse(status_code=200, detail="Successfully deleted country.")
+            return HttpResponse(status_code=200,
+                                detail="Successfully deleted country.")
         else:
-            return HTTPException(status_code=404, detail="Country does not exist.")
+            return HTTPException(status_code=404,
+                                 detail="Country does not exist.")
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
