@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from django.contrib.gis.geos import Polygon, MultiPolygon
 
 from . import models
 from . import schemas
@@ -49,21 +50,32 @@ def get_neighboring_countries(db: Session, country: schemas.Country):
 def get_countries(db: Session):
 	try:
 		# return db.execute("SELECT * FROM countries_country").fetchall()
-		return (db.query(models.Country).with_entities(
-			models.Country.id, models.Country.admin,
-			models.Country.iso_a3).all())
+		return (db.query(models.Country).with_entities(models.Country.id, models.Country.admin,models.Country.iso_a3).all())
 	except Exception as e:
 		raise e
 
 
 def insert_country(db: Session, country: schemas.Country):
-	# TODO
-	raise NotImplementedError
-	# try:
-	# except Exception as e:
-	# print(e)
+	try:
+		db.add(models.Country(**country.dict()))
+		points = country.dict()['geom']
+		country.dict()['geom'] = MultiPolygon([Polygon(point[0]) for point in points])
+		db.commit()
+	except Exception as e:
+		raise e
+# [ [ [ -0.0, 0.0 ] ] ] 
+	
 
+def update_country(db: Session, id: int):
+	try:
+		# TODO
+		raise NotImplementedError
+	except Exception as e:
+		raise e
 
-def delete_country_by_id(db: Session, id: int):
-	# TODO
-	raise NotImplementedError
+def delete_country(db: Session, id: int):
+	try:
+		# TODO
+		raise NotImplementedError
+	except Exception as e:
+		raise e
