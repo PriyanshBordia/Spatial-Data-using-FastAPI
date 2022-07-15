@@ -18,7 +18,7 @@
 ### Populate data to local db
 
 ```
-~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln polygon
+~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln spatial_data
 ```
 
 #### ALIAS
@@ -35,6 +35,7 @@
 ##### References
 
 - [Tutorial](https://www.fastapitutorial.com/)
+- [Docker](https://testdriven.io/blog/fastapi-crud/)
 - [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
 
 ##### Todo
