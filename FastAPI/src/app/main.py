@@ -100,6 +100,7 @@ async def update_country(country: schemas.CountryCreate, db: Session = Depends(g
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
+
 @app.delete("/country/delete/{id}")
 async def delete_country(id: int, db: Session = Depends(get_db)):
 	try:

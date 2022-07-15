@@ -10,7 +10,6 @@ greenlet==1.1.2
 h11==0.13.0
 idna==3.3
 iniconfig==1.1.1
-mypy-extensions==0.4.3
 packaging==21.3
 pathspec==0.9.0
 platformdirs==2.5.2
@@ -25,6 +24,8 @@ sniffio==1.2.0
 SQLAlchemy==1.4.39
 sqlparse==0.4.2
 starlette==0.19.1
+termcolor==1.1.0
+termcolor2==0.0.3
 toml==0.10.2
 tomli==2.0.1
 typing_extensions==4.3.0
