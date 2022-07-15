@@ -1,13 +1,8 @@
-from fastapi import Depends
-from fastapi import FastAPI
-from fastapi import HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from termcolor import cprint
 
-from ..db import crud
-from ..db import models
-from ..db import schemas
-from ..db import sessions
+from ..db import crud, models, schemas, sessions
 from .config import settings
 
 # models.Base.metadata.create_all(bind=sessions.engine)
@@ -88,7 +83,7 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 			response = crud.format_response(data=[country])
 			return response
 		else:
-			return HTTPException(status_code=409, detail=str(e))
+			return HTTPException(status_code=409, detail="Country already exists.")
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 

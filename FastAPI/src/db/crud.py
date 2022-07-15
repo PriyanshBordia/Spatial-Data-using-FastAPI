@@ -1,8 +1,7 @@
+from django.contrib.gis.geos import MultiPolygon, Polygon
 from sqlalchemy.orm import Session
-from django.contrib.gis.geos import Polygon, MultiPolygon
 
-from . import models
-from . import schemas
+from . import models, schemas
 
 
 def template() -> dict:
