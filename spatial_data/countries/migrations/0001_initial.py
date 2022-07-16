@@ -26,7 +26,8 @@ class Migration(migrations.Migration):
                 ("ogc_fid", models.IntegerField()),
                 ("admin", models.CharField(max_length=255)),
                 ("iso_a3", models.CharField(max_length=255)),
-                ("geom", django.contrib.gis.db.models.fields.PolygonField(srid=4326)),
+                ("geom",
+                 django.contrib.gis.db.models.fields.PolygonField(srid=4326)),
             ],
         ),
     ]

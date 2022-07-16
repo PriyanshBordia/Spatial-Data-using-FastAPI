@@ -30,12 +30,14 @@ def add_country(request):
                 return HttpResponseRedirect(reverse("home", args=()))
             else:
                 form = CountryForm(instance=country)
-                return render(
-                    request, "countries/add_country.html", context={"form": form}
-                )
+                return render(request,
+                              "countries/add_country.html",
+                              context={"form": form})
         else:
             form = CountryForm(instance=country)
-            return render(request, "countries/add_country.html", context={"form": form})
+            return render(request,
+                          "countries/add_country.html",
+                          context={"form": form})
     except Exception as e:
         message = f"{e}"
         messages.error(request, message)
