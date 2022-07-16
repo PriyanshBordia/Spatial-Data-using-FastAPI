@@ -15,9 +15,9 @@
 			<div class="row">
 				<form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data">
 					{% csrf_token %}
-				
+
 					{% bootstrap_form form layout='horizontal' %}
-				
+
 					<div class="row m-3">
 						<div class="col-md-6">
 							{% bootstrap_button "Reset" button_class="form-control form-control-lg btn btn-outline-warning btn-lg"
