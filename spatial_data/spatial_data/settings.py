@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "django_extensions",
-   	'bootstrap4',
-   	'fontawesome_5',
+    'bootstrap4',
+    'fontawesome_5',
 ]
 
 MIDDLEWARE = [
