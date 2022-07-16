@@ -1,3 +1,4 @@
+from django.contrib.gis.geos import MultiPolygon
 from pydantic import BaseModel
 
 

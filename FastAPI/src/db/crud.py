@@ -1,92 +1,153 @@
 from django.contrib.gis.geos import MultiPolygon, Polygon
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
 from . import models, schemas
 
 
-def template() -> dict:
-	return {"message": "", "meta": {"size": 0}, "result": [], "success": False}
-
-
-def format_response(data=list(), message="API is fast..") -> dict:
-	response = template()
-	response["message"] = message
-	response["result"].extend(data)
-	response["meta"]["size"] = len(data)
-	response["success"] = True
-	return response
-
-
-def get_country_by_id(db: Session, id: int):
+def success_response(data: list, message="API is fast..") -> dict:
 	try:
-	# ("SELECT * FROM countries_country WHERE id = :id", {"id": id}).fetchall()
-		return db.query(models.Country).filter(models.Country.id == id).all()
+		response = {"message": "", "meta": {"size": 0}, "result": [], "success": True}
+		response["message"] = message
+		response["meta"]["size"] = len(data)
+		response["result"].extend(data)
 	except Exception as e:
 		raise e
 
 
-def get_country_by_code(db: Session, code: str):
-	try:
-	# ("SELECT * FROM countries_country WHERE iso_a3 = :code", {"code": code}).fetchall()
-		return db.query(models.Country).filter(models.Country.iso_a3 == code).all()
+def error_response(error: list) -> dict:
+	try:	
+		response = {"error": {"code": []}, "success": False}
+		response["error"]["code"].extend(error)
+		return response
 	except Exception as e:
 		raise e
 
 
-def get_country_by_name(db: Session, name: str):
+def check_country(db: Session, code: str) -> bool:
 	try:
-	# ("SELECT * FROM countries_country WHERE admin = :name", {"name": name}).fetchall()
-		return db.query(models.Country).filter(models.Country.admin == name).all()
+		return db.query(models.Country).filter(models.Country.iso_a3 == code).exists()
 	except Exception as e:
 		raise e
 
 
-def get_neighboring_countries(db: Session, country: schemas.Country):
-	# TODO
-	raise NotImplementedError
-
-
-def get_countries(db: Session):
+def get_country_by_id(db: Session, id: int) -> dict:
+	"""
+		SELECT *
+		FROM countries_country 
+		WHERE id = id
+	"""
 	try:
-	# ("SELECT * FROM countries_country").fetchall()
-		return (db.query(models.Country).with_entities(models.Country.id, models.Country.admin,models.Country.iso_a3).all())
+		country = db.query(models.Country).filter(models.Country.id == id).one()
+		if country is not None:
+			return success_response(data=[country])
+		else:
+			return error_response(error=["Country does not exist."])
 	except Exception as e:
 		raise e
 
 
-def insert_country(db: Session, country: schemas.CountryCreate):
+def get_country_by_code(db: Session, code: str) -> dict:
+	"""
+		SELECT * 
+		FROM countries_country 
+		WHERE iso_a3 = code
+	"""
 	try:
-		print(country.dict())
-		db.add(models.Country(**country.dict()))
-		db.commit()
-		db.refresh(country)
+		country = db.query(models.Country).filter(models.Country.iso_a3 == code).one()
+		if country is not None:
+			return success_response(data=[country])
+		else:
+			return error_response(error=["Country does not exist."])
+	except Exception as e:
+		raise e
+
+
+def get_country_by_name(db: Session, name: str) -> dict:
+	"""
+		SELECT * 
+		FROM countries_country 
+		WHERE admin = name
+	"""
+	try:
+		country = db.query(models.Country).filter(models.Country.admin == name).one()
+		if country is not None:
+			return success_response(data=[country])
+		else:
+			return error_response(error=["Country does not exist."])
+	except Exception as e:
+		raise e
+
+
+def get_all_countries(db: Session) -> dict:
+	"""
+		SELECT * 
+		FROM countries_country
+	"""
+	try:
+		countries = db.query(models.Country).with_entities(models.Country.id, models.Country.admin, models.Country.iso_a3).all()
+		return success_response(data=countries)
+	except Exception as e:
+		raise e
+
+
+def insert_country(db: Session, country: schemas.CountryCreate) -> dict:
+	"""
+		INSERT INTO countries_country(id, admin, iso_a3, geom)
+		VALUES (country.admin, country.iso_a3, country.geom)
+	"""
+	try:
+		if not check_country(db, country.code):
+			db.add(models.Country(**country.dict()))
+			db.commit()
+			db.refresh(country)
+			return success_response(data=[country], message="Country inserted successfully.")
+		else:
+			return error_response(error=["Country already exists.!"])
 	except Exception as e:
 		raise e
 	
 
-def update_country(db: Session, id: int, country: schemas.CountryCreate):
+def update_country(db: Session, id: int, country: schemas.CountryCreate) -> dict:
+	"""
+		UPDATE countries_country 
+		SET admin = admin, iso_a3 = iso_a3 
+		WHERE id = id
+	"""
 	try:
-	# ("UPDATE countries_country SET admin = :admin, iso_a3 = :iso_a3 WHERE id :id;", {"admin": country.admin, "iso_a3": country.iso_a3, "id": id})
-		db.query(models.Country).filter(models.Country.id == id).update(country.__dict__)
-		db.commit()
-		return f"Country with id: {id} updated successfully."
+		if check_country(db, country.code):
+			db.query(models.Country).filter(models.Country.id == id).update(country.__dict__)
+			db.commit()
+			return success_response(data=[country], message=(f"Country with id: {id} updated successfully."))
+		else:
+			return error_response(error=["Country does not exists.!"])
 	except Exception as e:
 		raise e
 
 
-def delete_country(db: Session, country: schemas.Country):
+def delete_country(db: Session, id: int) -> dict:
+	"""
+		DELETE 
+		FROM countries_country
+		WHERE id = country.id
+	"""
 	try:
-		db.delete(country)
-		db.commit()
-		return f"Country with id: {id} deleted successfully."
+		country = db.query(models.Country).filter(models.Country.id == id).all()
+		if len(country) > 0:
+			db.delete(country)
+			db.commit()
+			return success_response(data=[country], message=(f"Country with id: {id} deleted successfully."))
+		else:
+			return error_response(error=["Country does not exists.!"])
 	except Exception as e:
 		raise e
 
 
-"""
-{
-    "geom": "0106000020E6100000010000000103000000010000001A000000362D7CD3CD7F51C098543BD7B8272940382D7CD3ED7B51C06810942C3E102940382D7CD32D7B51C0408D3ED7D8092940ACF97BD39B7A51C0707A3DD778FE2840705AD128557851C020A03FD738E82840A8B67CD31D7851C0181DEA81D3DA28406889277ED67851C0408D3ED7D8D5284004D97CD3297A51C030DE3BD7E8D52840342D7CD38D7B51C078673CD718DA28409E28D2287D7C51C0787A3DD778E12840382D7CD32D7B51C0787A3DD778E12840382D7CD32D7B51C0D0C541D7F8E428408AC1D128597D51C0704F42D728ED2840E6E3D128C58151C0005C982CBE0B2940623E7CD3138351C0B055ED81F30F294076A57CD3B78351C0C8163FD708132940AC44277EFE8351C0E8C541D7F8172940A028D228DD8351C0784F42D7281D2940E4E3D128458351C018DE3BD7E8252940B044277E1E8351C078FD922CDE2A2940B044277E5E8351C0E02FEB81333329404206D228D18351C0A8EA912C7E3A2940FE4AD228E98351C0E82FEB8133402940B044277E1E8351C0F0033ED7A8432940725AD128758051C0903C41D7C82B2940362D7CD3CD7F51C098543BD7B8272940",
-    "admin": "Atlantis",
-    "iso_a3": "ATL"
-}
-"""
+def get_neighboring_countries(db: Session, country: schemas.Country) -> dict:
+	"""
+	"""
+	try:
+		# TODO
+		raise NotImplementedError
+	except Exception as e:
+		raise e
