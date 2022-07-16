@@ -59,7 +59,7 @@ def insert_country(db: Session, country: schemas.Country):
 		db.add(models.Country(**country.dict()))
 		points = country.dict()['geom']
 		country.dict()['geom'] = MultiPolygon([Polygon(point[0]) for point in points])
-		db.commit()
+		# db.commit()
 	except Exception as e:
 		raise e
 # [ [ [ -0.0, 0.0 ] ] ] 

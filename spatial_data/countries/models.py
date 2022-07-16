@@ -13,4 +13,4 @@ class Country(models.Model):
         return f"{self.id}. {self.admin} {self.iso_a3}"
 
     class Meta:
-        ordering = ["admin"]
+        ordering = ["-id"]
