@@ -43,9 +43,9 @@ async def get_all_countries(db: Session = Depends(get_db)):
 async def get_country_id(id: int, db: Session = Depends(get_db)):
 	try:
 		country = crud.get_country_by_id(db, id)
-		if country is None:
+		if country is None or len(country) == 0:
 			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=[country])
+		response = crud.format_response(data=country)
 		return response
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
@@ -55,7 +55,7 @@ async def get_country_id(id: int, db: Session = Depends(get_db)):
 async def get_country_code(code: str, db: Session = Depends(get_db)):
 	try:
 		country = crud.get_country_by_code(db, code)
-		if country is None:
+		if country is None or len(country) == 0:
 			return HTTPException(status_code=404, detail="Country not Found.")
 		response = crud.format_response(data=[country])
 		return response
@@ -67,9 +67,9 @@ async def get_country_code(code: str, db: Session = Depends(get_db)):
 async def get_country_name(name: str, db: Session = Depends(get_db)):
 	try:
 		country = crud.get_country_by_name(db, name)
-		if country is None:
+		if country is None or len(country) == 0:
 			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=[country])
+		response = crud.format_response(data=country)
 		return response
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
@@ -78,7 +78,8 @@ async def get_country_name(name: str, db: Session = Depends(get_db)):
 @app.post("/country/create/")
 async def create_country(country: schemas.CountryCreate, db: Session = Depends(get_db)):
 	try:
-		if not crud.get_country_by_id(db, country.id):
+		check_country_in_db = crud.get_country_by_code(db, country.iso_a3)
+		if check_country_in_db is None or len(check_country_in_db) == 0:
 			crud.insert_country(db, country)
 			response = crud.format_response(data=[country])
 			return response
@@ -91,8 +92,10 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 @app.put("/country/update/{id}")
 async def update_country(id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)):
 	try:
-		if crud.get_country_by_id(db, id) is not None:
-			message = crud.update_country(db, country)
+		check_country_in_db = crud.get_country_by_id(db, id)
+		if check_country_in_db is not None and len(check_country_in_db) == 1:
+			message = crud.update_country(db, id, country)
+			print(message)
 			response = crud.format_response(data=[country], message=message)
 			return response
 		else:
@@ -105,7 +108,7 @@ async def update_country(id: int, country: schemas.CountryCreate, db: Session = 
 async def delete_country(id: int, db: Session = Depends(get_db)):
 	try:
 		country = crud.get_country_by_id(db, id)
-		if country is not None:
+		if country is not None and len(country) == 1:
 			message = crud.delete_country(db, country)
 			response = crud.format_response(data=[country], message=message)
 			return response
