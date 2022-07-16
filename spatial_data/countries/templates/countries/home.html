@@ -7,8 +7,17 @@
 
 {% block head %}
 	{% load static %}
+	{% load bootstrap4 %}
+	{% load fontawesome_5 %}
 {% endblock %}
 
 {% block body %}
-	{{ status }}
+	<div class="container container-fluid text-center" style="max-width: 1100px; margin: 2rem auto 2rem auto;">
+		<div class="justify-content-center">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-9"></div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
