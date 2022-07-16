@@ -10,30 +10,26 @@
 {% endblock %}
 
 {% block body %}
-	<form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data">
-		{% csrf_token %}
-
-		{{ form.as_ul }}
-
-		<input type="submit" value="Upload"></button>
-	</form>
-
-	{% for message in messages %}
-		<div class="container-fluid p-0">
-			<div class="alert {{ message.tags }} alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				{% if message.tags == 'error' %}
-					<div class="alert alert-danger text-center" role="alert">
-						{{ message }}
+	<div class="container container-fluid text-center" style="max-width: 1100px; margin: 2rem auto 2rem auto;">
+		<div class="justify-content-center">
+			<div class="row">
+				<form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+				
+					{% bootstrap_form form layout='horizontal' %}
+				
+					<div class="row m-3">
+						<div class="col-md-6">
+							{% bootstrap_button "Reset" button_class="form-control form-control-lg btn btn-outline-warning btn-lg"
+							button_type="reset" %}
+						</div>
+						<div class="col-md-6">
+							{% bootstrap_button "Upload" button_class="form-control form-control-lg btn btn-outline-success btn-lg"
+							button_type="submit" %}
+						</div>
 					</div>
-				{% else %}
-					<div class="alert alert-{{ message.tags }} text-center" role="alert">
-						{{ message }}
-					</div>
-				{% endif %}
+				</form>
 			</div>
 		</div>
-	{% endfor %}
+	</div>
 {% endblock %}
