@@ -1,7 +1,6 @@
 from http.client import HTTPResponse
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-from termcolor import cprint
 
 from ..db import crud, models, schemas, sessions
 from .config import settings
@@ -92,8 +91,7 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 @app.put("/country/update/{id}")
 async def update_country(id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)):
 	try:
-		country = crud.get_country_by_id(db, id)
-		if country is not None:
+		if crud.get_country_by_id(db, id) is not None:
 			message = crud.update_country(db, country)
 			response = crud.format_response(data=[country], message=message)
 			return response
