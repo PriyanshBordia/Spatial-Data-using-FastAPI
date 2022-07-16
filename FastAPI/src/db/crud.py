@@ -49,7 +49,13 @@ def get_neighboring_countries(db: Session, country: schemas.Country):
 def get_countries(db: Session):
     try:
         # ("SELECT * FROM countries_country").fetchall()
-        return (db.query(models.Country).with_entities(models.Country.id, models.Country.admin, models.Country.iso_a3).all())
+        return (
+            db.query(models.Country)
+            .with_entities(
+                models.Country.id, models.Country.admin, models.Country.iso_a3
+            )
+            .all()
+        )
     except Exception as e:
         raise e
 
@@ -67,8 +73,9 @@ def insert_country(db: Session, country: schemas.CountryCreate):
 def update_country(db: Session, id: int, country: schemas.CountryCreate):
     try:
         # ("UPDATE countries_country SET admin = :admin, iso_a3 = :iso_a3 WHERE id :id;", {"admin": country.admin, "iso_a3": country.iso_a3, "id": id})
-        db.query(models.Country).filter(
-            models.Country.id == id).update(country.__dict__)
+        db.query(models.Country).filter(models.Country.id == id).update(
+            country.__dict__
+        )
         db.commit()
         return f"Country with id: {id} updated successfully."
     except Exception as e:

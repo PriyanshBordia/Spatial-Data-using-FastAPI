@@ -90,7 +90,9 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 
 
 @app.put("/country/update/{id}")
-async def update_country(id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)):
+async def update_country(
+    id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)
+):
     try:
         check_country_in_db = crud.get_country_by_id(db, id)
         if check_country_in_db is not None and len(check_country_in_db) == 1:
