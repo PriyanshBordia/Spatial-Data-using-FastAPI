@@ -1,13 +1,16 @@
 import json
 
 from django.contrib import messages
-from django.contrib.gis.geos import MultiPolygon, Polygon
-from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.geos import Polygon
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from termcolor import cprint
 
-from .forms import CountryForm, UploadForm
+from .forms import CountryForm
+from .forms import UploadForm
 from .models import Country
 
 # Create your views here.
