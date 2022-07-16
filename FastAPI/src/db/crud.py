@@ -20,7 +20,7 @@ def format_response(data=list(), message="API is fast..") -> dict:
 def get_country_by_id(db: Session, id: int):
 	try:
 		# return db.execute("SELECT * FROM countries_country WHERE id = :id", {"id": id}).fetchall()
-		return db.query(models.Country).filter(models.Country.id == id).all()
+		return db.query(models.Country).filter(models.Country.id == id).one()
 	except Exception as e:
 		raise e
 
@@ -28,7 +28,7 @@ def get_country_by_id(db: Session, id: int):
 def get_country_by_code(db: Session, code: str):
 	try:
 		# return db.execute("SELECT * FROM countries_country WHERE iso_a3 = :code", {"code": code}).fetchall()
-		return db.query(models.Country).filter(models.Country.iso_a3 == code).all()
+		return db.query(models.Country).filter(models.Country.iso_a3 == code).one()
 	except Exception as e:
 		raise e
 
@@ -36,7 +36,7 @@ def get_country_by_code(db: Session, code: str):
 def get_country_by_name(db: Session, name: str):
 	try:
 		# return db.execute("SELECT * FROM countries_country WHERE admin = :name", {"name": name}).fetchall()
-		return db.query(models.Country).filter(models.Country.admin == name).all()
+		return db.query(models.Country).filter(models.Country.admin == name).one()
 	except Exception as e:
 		raise e
 
@@ -62,19 +62,22 @@ def insert_country(db: Session, country: schemas.Country):
 		# db.commit()
 	except Exception as e:
 		raise e
-# [ [ [ -0.0, 0.0 ] ] ] 
 	
 
 def update_country(db: Session, id: int):
 	try:
-		# TODO
-		raise NotImplementedError
+		db.update(models.Country).filter(models.Country.id == id)
+		db.commit()
+		db.refresh()
+		return f"Country with id: {id} updated successfully."
 	except Exception as e:
 		raise e
 
-def delete_country(db: Session, id: int):
+
+def delete_country(db: Session, country: schemas.Country):
 	try:
-		# TODO
-		raise NotImplementedError
+		db.delete(country)
+		db.commit()
+		return f"Country with id: {id} deleted successfully."
 	except Exception as e:
 		raise e

@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from termcolor import cprint
@@ -45,7 +46,7 @@ async def get_country_id(id: int, db: Session = Depends(get_db)):
 		country = crud.get_country_by_id(db, id)
 		if country is None:
 			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=country)
+		response = crud.format_response(data=[country])
 		return response
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
@@ -55,9 +56,9 @@ async def get_country_id(id: int, db: Session = Depends(get_db)):
 async def get_country_code(code: str, db: Session = Depends(get_db)):
 	try:
 		country = crud.get_country_by_code(db, code)
-		if country is None or len(country) == 0:
+		if country is None:
 			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=country)
+		response = crud.format_response(data=[country])
 		return response
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
@@ -67,9 +68,9 @@ async def get_country_code(code: str, db: Session = Depends(get_db)):
 async def get_country_name(name: str, db: Session = Depends(get_db)):
 	try:
 		country = crud.get_country_by_name(db, name)
-		if country is None or len(country) == 0:
+		if country is None:
 			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=country)
+		response = crud.format_response(data=[country])
 		return response
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
@@ -88,12 +89,13 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 		return HTTPException(status_code=400, detail=str(e))
 
 
-@app.put("/country/update/")
-async def update_country(country: schemas.CountryCreate, db: Session = Depends(get_db)):
+@app.put("/country/update/{id}")
+async def update_country(id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)):
 	try:
-		if crud.get_country_by_id(db, country.id):
-			crud.update_country(db, country)
-			response = crud.format_response(data=[country])
+		country = crud.get_country_by_id(db, id)
+		if country is not None:
+			message = crud.update_country(db, country)
+			response = crud.format_response(data=[country], message=message)
 			return response
 		else:
 			return HTTPException(status_code=404, detail="Country does not exist.")
@@ -104,9 +106,11 @@ async def update_country(country: schemas.CountryCreate, db: Session = Depends(g
 @app.delete("/country/delete/{id}")
 async def delete_country(id: int, db: Session = Depends(get_db)):
 	try:
-		if crud.get_country_by_id(db, country.id):
-			crud.delete_country(db, country)
-			return HttpResponse(status_code=200, detail="Successfully deleted country.")
+		country = crud.get_country_by_id(db, id)
+		if country is not None:
+			message = crud.delete_country(db, country)
+			response = crud.format_response(data=[country], message=message)
+			return response
 		else:
 			return HTTPException(status_code=404, detail="Country does not exist.")
 	except Exception as e:
