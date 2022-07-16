@@ -1,6 +1,6 @@
 from django.contrib.gis.geos import MultiPolygon, Polygon
-from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
 
 from . import models, schemas
 

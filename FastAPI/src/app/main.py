@@ -8,7 +8,7 @@ from .config import settings
 # models.Base.metadata.create_all(bind=sessions.engine)
 
 # Create FastAPI object
-app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
+app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION, contact=settings.CONTACT)
 
 
 def get_db():
