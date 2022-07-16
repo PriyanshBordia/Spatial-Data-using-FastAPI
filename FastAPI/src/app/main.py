@@ -82,7 +82,8 @@ async def get_country_name(name: str, db: Session = Depends(get_db)):
 
 
 @app.post("/country/create/")
-async def create_country(country: schemas.CountryCreate, db: Session = Depends(get_db)):
+async def create_country(country: schemas.CountryCreate,
+                         db: Session = Depends(get_db)):
     try:
         check_country_in_db = crud.get_country_by_code(db, country.iso_a3)
         if check_country_in_db is None or len(check_country_in_db) == 0:
@@ -90,15 +91,16 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
             response = crud.format_response(data=[country])
             return response
         else:
-            return HTTPException(status_code=409, detail="Country already exists.")
+            return HTTPException(status_code=409,
+                                 detail="Country already exists.")
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
 
 
 @app.put("/country/update/{id}")
-async def update_country(
-    id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)
-):
+async def update_country(id: int,
+                         country: schemas.CountryCreate,
+                         db: Session = Depends(get_db)):
     try:
         check_country_in_db = crud.get_country_by_id(db, id)
         if check_country_in_db is not None and len(check_country_in_db) == 1:
@@ -107,7 +109,8 @@ async def update_country(
             response = crud.format_response(data=[country], message=message)
             return response
         else:
-            return HTTPException(status_code=404, detail="Country does not exist.")
+            return HTTPException(status_code=404,
+                                 detail="Country does not exist.")
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
 
@@ -121,6 +124,7 @@ async def delete_country(id: int, db: Session = Depends(get_db)):
             response = crud.format_response(data=[country], message=message)
             return response
         else:
-            return HTTPException(status_code=404, detail="Country does not exist.")
+            return HTTPException(status_code=404,
+                                 detail="Country does not exist.")
     except Exception as e:
         return HTTPException(status_code=400, detail=str(e))
