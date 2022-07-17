@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from termcolor import cprint
 
-from .forms import UploadForm, CountryForm
+from .forms import CountryForm, UploadForm
 from .models import Country
 
 # Create your views here.

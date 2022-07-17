@@ -1,18 +1,15 @@
-from shapely.geometry import MultiPolygon
 from pydantic import BaseModel
+from shapely.geometry import MultiPolygon
 
 
 class CountryBase(BaseModel):
 	admin: str
 	iso_a3: str
-	geom: MultiPolygon
-
-	class Config:
-		arbitrary_types_allowed = True
 
 
 class Country(CountryBase):
 	id: int
+	geom: str
 
 	class Config:
 		orm_mode = True
