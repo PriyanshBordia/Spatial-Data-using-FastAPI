@@ -103,12 +103,11 @@ def insert_country(db: Session, country: schemas.CountryCreate) -> dict:
 		if not check_country(db, code=country.iso_a3):
 			db.add(models.Country(**country.dict()))
 			db.commit()
-			db.refresh(country)
 			return success_response(data=[country], message="Country inserted successfully.")
 		else:
 			return error_response(error=["Country already exists.!"])
 	except Exception as e:
-		raise e
+		return error_response(error=[str(e)])
 	
 
 def update_country(db: Session, id: int, country: schemas.CountryCreate) -> dict:
