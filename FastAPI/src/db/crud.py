@@ -11,6 +11,7 @@ def success_response(data: list, message="API is fast..") -> dict:
 		response["message"] = message
 		response["meta"]["size"] = len(data)
 		response["result"].extend(data)
+		return response
 	except Exception as e:
 		raise e
 

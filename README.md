@@ -37,6 +37,7 @@
 - [Tutorial](https://www.fastapitutorial.com/)
 - [Docker](https://testdriven.io/blog/fastapi-crud/)
 - [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
+- [2](https://github.com/jordaneremieff/django-fastapi-example/blob/main/django_fastapi/project/settings.py)
 
 ##### Todo
 

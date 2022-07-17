@@ -1,8 +1,7 @@
-from django.http import HttpResponse
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
-from ..db import crud, models, schemas, sessions
+from ..db import crud, schemas, sessions
 from .config import settings
 
 # models.Base.metadata.create_all(bind=sessions.engine)
@@ -21,8 +20,10 @@ def get_db():
 
 @app.get("/")
 async def home():
-	response = crud.format_response()
-	return response
+	try:
+		return crud.success_response(data=[])
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/country/id/{id}")

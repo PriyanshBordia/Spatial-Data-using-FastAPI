@@ -1,11 +1,14 @@
-from django.contrib.gis.geos import MultiPolygon
+from shapely.geometry import MultiPolygon
 from pydantic import BaseModel
 
 
 class CountryBase(BaseModel):
 	admin: str
 	iso_a3: str
-	geom: str
+	geom: MultiPolygon
+
+	class Config:
+		arbitrary_types_allowed = True
 
 
 class Country(CountryBase):
