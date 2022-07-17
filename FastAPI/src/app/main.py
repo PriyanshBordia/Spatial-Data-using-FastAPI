@@ -1,4 +1,4 @@
-from http.client import HTTPResponse
+from django.http import HttpResponse
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
@@ -8,7 +8,7 @@ from .config import settings
 # models.Base.metadata.create_all(bind=sessions.engine)
 
 # Create FastAPI object
-app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
+app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION, contact=settings.CONTACT)
 
 
 def get_db():
@@ -25,28 +25,10 @@ async def home():
 	return response
 
 
-@app.get("/countries")
-async def get_all_countries(db: Session = Depends(get_db)):
-	try:
-		countries = crud.get_countries(db)
-		if countries is None:
-			return HTTPException(status_code=404, detail="Not Found.")
-		elif len(countries) == 0:
-			return HTTPException(status_code=401, detail="Unauthorized.")
-		response = crud.format_response(data=countries)
-		return response
-	except Exception as e:
-		return HTTPException(status_code=400, detail=str(e))
-
-
 @app.get("/country/id/{id}")
 async def get_country_id(id: int, db: Session = Depends(get_db)):
 	try:
-		country = crud.get_country_by_id(db, id)
-		if country is None or len(country) == 0:
-			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=country)
-		return response
+		return crud.get_country_by_id(db, id)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
@@ -54,11 +36,7 @@ async def get_country_id(id: int, db: Session = Depends(get_db)):
 @app.get("/country/code/{code}")
 async def get_country_code(code: str, db: Session = Depends(get_db)):
 	try:
-		country = crud.get_country_by_code(db, code)
-		if country is None or len(country) == 0:
-			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=[country])
-		return response
+		return crud.get_country_by_code(db, code)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
@@ -66,11 +44,15 @@ async def get_country_code(code: str, db: Session = Depends(get_db)):
 @app.get("/country/name/{name}")
 async def get_country_name(name: str, db: Session = Depends(get_db)):
 	try:
-		country = crud.get_country_by_name(db, name)
-		if country is None or len(country) == 0:
-			return HTTPException(status_code=404, detail="Country not Found.")
-		response = crud.format_response(data=country)
-		return response
+		return crud.get_country_by_name(db, name)
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/countries")
+async def get_all_countries(db: Session = Depends(get_db)):
+	try:
+		return crud.get_all_countries(db)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
@@ -78,13 +60,7 @@ async def get_country_name(name: str, db: Session = Depends(get_db)):
 @app.post("/country/create/")
 async def create_country(country: schemas.CountryCreate, db: Session = Depends(get_db)):
 	try:
-		check_country_in_db = crud.get_country_by_code(db, country.iso_a3)
-		if check_country_in_db is None or len(check_country_in_db) == 0:
-			crud.insert_country(db, country)
-			response = crud.format_response(data=[country])
-			return response
-		else:
-			return HTTPException(status_code=409, detail="Country already exists.")
+		return crud.insert_country(db, country)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
@@ -92,14 +68,7 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 @app.put("/country/update/{id}")
 async def update_country(id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)):
 	try:
-		check_country_in_db = crud.get_country_by_id(db, id)
-		if check_country_in_db is not None and len(check_country_in_db) == 1:
-			message = crud.update_country(db, id, country)
-			print(message)
-			response = crud.format_response(data=[country], message=message)
-			return response
-		else:
-			return HTTPException(status_code=404, detail="Country does not exist.")
+		return crud.update_country(db, id, country)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
@@ -107,12 +76,6 @@ async def update_country(id: int, country: schemas.CountryCreate, db: Session = 
 @app.delete("/country/delete/{id}")
 async def delete_country(id: int, db: Session = Depends(get_db)):
 	try:
-		country = crud.get_country_by_id(db, id)
-		if country is not None and len(country) == 1:
-			message = crud.delete_country(db, country)
-			response = crud.format_response(data=[country], message=message)
-			return response
-		else:
-			return HTTPException(status_code=404, detail="Country does not exist.")
+		return crud.delete_country(db, id)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
