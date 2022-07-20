@@ -21,16 +21,16 @@
 ~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln spatial_data
 ```
 
-#### Sample Input 
+#### Sample Input
 
 {
-  "admin": "Wakanda",
-  "iso_a3": "WKA",
+"admin": "Wakanda",
+"iso_a3": "WKA",
 }
 {
-  "admin": "Atlantis",
-  "iso_a3": "ATL",
-  "geom": "[[[[0.0, 0.0]]]]"
+"admin": "Atlantis",
+"iso_a3": "ATL",
+"geom": "[[[[0.0, 0.0]]]]"
 }
 
 ### Test
