@@ -16,7 +16,7 @@ from .models import Country
 def home(request):
 	return render(request, "countries/home.html", context={})
 
-
+# 
 def add_country(request):
 	try:
 		country = Country()

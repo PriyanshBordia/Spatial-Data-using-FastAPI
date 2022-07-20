@@ -1,5 +1,13 @@
+import geojson
+
 from ..db import crud, models
 
+
+def format(country: tuple) -> dict:
+	try:
+		return {"id": country[0], "name": country[1], "code": country[2], "coordinates": geojson.loads(country[3]).get("coordinates")}
+	except Exception as e:
+		raise e
 
 def success_response(data: list, message="API is fast..") -> dict:
 	try:

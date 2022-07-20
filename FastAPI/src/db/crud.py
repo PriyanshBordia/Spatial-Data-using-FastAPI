@@ -23,9 +23,9 @@ def get_country_by_id(db: Session, id: int) -> dict:
 		WHERE id = id
 	"""
 	try:
-		country = db.query(models.Country).filter(models.Country.id == id).one_or_none()
+		country = db.query(models.Country.id, models.Country.admin, models.Country.iso_a3, models.Country.geom.ST_AsGeoJSON()).filter(models.Country.id == id).one_or_none()
 		if country is not None:
-			return success_response(data=[country])
+			return success_response(data=[format(country)])
 		else:
 			return error_response(error=[(f"Country with id: {id} does not exist.")])
 	except Exception as e:
@@ -40,9 +40,9 @@ def get_country_by_code(db: Session, code: str) -> dict:
 		WHERE iso_a3 = code
 	"""
 	try:
-		country = db.query(models.Country).filter(models.Country.iso_a3 == code).one_or_none()
+		country = db.query(models.Country.id, models.Country.admin, models.Country.iso_a3, models.Country.geom.ST_AsGeoJSON()).filter(models.Country.iso_a3 == code.upper()).one_or_none()
 		if country is not None:
-			return success_response(data=[country])
+			return success_response(data=[format(country)])
 		else:
 			return error_response(error=[(f"Country with code: {code} does not exist.")])
 	except Exception as e:
@@ -56,9 +56,9 @@ def get_country_by_name(db: Session, name: str) -> dict:
 		WHERE admin = name
 	"""
 	try:
-		country = db.query(models.Country).filter(models.Country.admin == name).one_or_none()
+		country = db.query(models.Country.id, models.Country.admin, models.Country.iso_a3, models.Country.geom.ST_AsGeoJSON()).filter(models.Country.admin == name).one_or_none()
 		if country is not None:
-			return success_response(data=[country])
+			return success_response(data=[format(country)])
 		else:
 			return error_response(error=[(f"Country with name: {name} does not exist.")])
 	except Exception as e:
