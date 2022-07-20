@@ -1,26 +1,8 @@
+from geoalchemy2.functions import *
 from sqlalchemy.orm import Session
 
+from ..utils.utility import *
 from . import models, schemas
-
-
-def success_response(data: list, message="API is fast..") -> dict:
-	try:
-		response = {"message": "", "meta": {"size": 0}, "result": [], "success": True}
-		response["message"] = message
-		response["meta"]["size"] = len(data)
-		response["result"].extend(data)
-		return response
-	except Exception as e:
-		raise e
-
-
-def error_response(error: list) -> dict:
-	try:	
-		response = {"error": {"code": []}, "success": False}
-		response["error"]["code"].extend(error)
-		return response
-	except Exception as e:
-		raise e
 
 
 def check_country(db: Session, id=None, code=None) -> bool:
@@ -47,6 +29,7 @@ def get_country_by_id(db: Session, id: int) -> dict:
 		else:
 			return error_response(error=[(f"Country with id: {id} does not exist.")])
 	except Exception as e:
+		print(e)
 		return error_response(error=[str(e)])
 
 
@@ -161,14 +144,21 @@ def delete_country(db: Session, id: int) -> dict:
 		return error_response(error=[str(e)])
 
 
-def get_neighboring_countries(db: Session, country: schemas.Country) -> dict:
+def get_neighboring_countries(db: Session, id: int) -> dict:
 	"""
 		SELECT id, admin, iso_a3, ST_AsText(geom)
 		FROM countries_country
 		HAVING ST_Distance(country.geom)
 	"""
 	try:
-		# TODO
-		raise NotImplementedError
+		country = db.query(models.Country).filter(models.Country.id == id).one_or_none()
+		if country is not None:
+			neighbors = db.query(models.Country).filter(models.Country.id != id, models.Country.geom.intersects(country.geom)).with_entities(models.Country.id, models.Country.admin, models.Country.iso_a3).all()
+			if len(neighbors) > 0:
+				return success_response(data=neighbors, message="Neighbors found.")
+			else:
+				return success_response(data=[], message="Neighbors not found.")
+		else:
+			return error_response(error=[(f"Country with id: {id} does not exists.!")])
 	except Exception as e:
 		return error_response(error=[str(e)])

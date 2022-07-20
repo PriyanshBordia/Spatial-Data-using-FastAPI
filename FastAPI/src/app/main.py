@@ -49,6 +49,7 @@ async def get_country_name(name: str, db: Session = Depends(get_db)):
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
+
 @app.get("/country/name/{name}")
 async def get_country_name(name: str, db: Session = Depends(get_db)):
 	try:
@@ -85,5 +86,13 @@ async def update_country(id: int, country: schemas.CountryCreate, db: Session = 
 async def delete_country(id: int, db: Session = Depends(get_db)):
 	try:
 		return crud.delete_country(db, id)
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/country/neighbors/{id}")
+async def get_neighbors(id: int, db: Session = Depends(get_db)):
+	try:
+		return crud.get_neighboring_countries(db, id)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
