@@ -82,6 +82,22 @@ def get_country_by_name(db: Session, name: str) -> dict:
 		return error_response(error=[str(e)])
 
 
+def get_country_by_name_contains(db: Session, name: str) -> dict:
+	"""
+		SELECT * 
+		FROM countries_country 
+		WHERE admin like "%name%"
+	"""
+	try:
+		countries = db.query(models.Country).filter(models.Country.admin.contains(name)).with_entities(models.Country.id, models.Country.admin, models.Country.iso_a3).all()
+		if len(countries) > 0:
+			return success_response(data=countries)
+		else:
+			return error_response(error=[(f"No country contains `{name}` in name.")])
+	except Exception as e:
+		return error_response(error=[str(e)])
+
+
 def get_all_countries(db: Session) -> dict:
 	"""
 		SELECT * 

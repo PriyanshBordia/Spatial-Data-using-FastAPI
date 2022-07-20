@@ -42,6 +42,13 @@ async def get_country_code(code: str, db: Session = Depends(get_db)):
 		return HTTPException(status_code=400, detail=str(e))
 
 
+@app.get("/country/name/contains/{name}")
+async def get_country_name(name: str, db: Session = Depends(get_db)):
+	try:
+		return crud.get_country_by_name_contains(db, name)
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
+
 @app.get("/country/name/{name}")
 async def get_country_name(name: str, db: Session = Depends(get_db)):
 	try:
