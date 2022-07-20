@@ -21,6 +21,24 @@
 ~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln spatial_data
 ```
 
+#### Sample Input 
+
+{
+  "admin": "Wakanda",
+  "iso_a3": "WKA",
+}
+{
+  "admin": "Atlantis",
+  "iso_a3": "ATL",
+  "geom": "[[[[0.0, 0.0]]]]"
+}
+
+### Test
+
+```
+~ pytest src/tests/tests.py
+```
+
 #### ALIAS
 
 - image_name = spatial-data

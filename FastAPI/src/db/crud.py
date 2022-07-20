@@ -1,4 +1,4 @@
-from geoalchemy2.functions import *
+from geoalchemy2.functions import ST_AsGeoJSON
 from sqlalchemy.orm import Session
 
 from ..utils.utility import *
@@ -143,7 +143,7 @@ def delete_country(db: Session, id: int) -> dict:
 	except Exception as e:
 		return error_response(error=[str(e)])
 
-
+##
 def get_neighboring_countries(db: Session, id: int) -> dict:
 	"""
 		SELECT id, admin, iso_a3, ST_AsText(geom)
