@@ -1,6 +1,7 @@
 import geojson
 
-from ..db import crud, models
+from ..db import crud
+from ..db import models
 
 
 def format(country: tuple) -> dict:

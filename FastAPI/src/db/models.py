@@ -1,5 +1,7 @@
 from geoalchemy2 import Geometry
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
 
 from ..app.config import settings
 from .sessions import Base

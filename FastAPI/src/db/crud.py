@@ -1,8 +1,9 @@
 from geoalchemy2.functions import ST_AsGeoJSON
 from sqlalchemy.orm import Session
 
+from . import models
+from . import schemas
 from ..utils.utility import *
-from . import models, schemas
 
 
 def check_country(db: Session, id=None, code=None) -> bool:
