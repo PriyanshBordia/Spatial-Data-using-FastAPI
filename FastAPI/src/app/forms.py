@@ -1,7 +1,6 @@
 from typing import List
 
 from django.contrib.gis.geos import MultiPolygon, Polygon
-
 from fastapi import Request
 
 
