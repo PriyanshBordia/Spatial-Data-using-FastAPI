@@ -11,4 +11,4 @@ class Country(Base):
     id = Column(Integer, primary_key=True)
     admin = Column(String, unique=True)
     iso_a3 = Column(String, unique=True)
-    geom = Column(Geometry(geometry_type='MULTIPOLYGON', srid=4326))
+    geom = Column(Geometry(geometry_type="MULTIPOLYGON", srid=4326))
