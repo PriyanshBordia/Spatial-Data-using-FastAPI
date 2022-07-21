@@ -10,7 +10,7 @@ services:
       - 8002:8000
   db:
     container_name: database
-    image: postgres:13-alpine
+    image: postgis/postgis:13-3.2-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     expose:
