@@ -7,8 +7,11 @@ from .config import settings
 # models.Base.metadata.create_all(bind=sessions.engine)
 
 # Create FastAPI object
-app = FastAPI(title=settings.PROJECT_NAME,
-              version=settings.PROJECT_VERSION, contact=settings.CONTACT)
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version=settings.PROJECT_VERSION,
+    contact=settings.CONTACT,
+)
 
 
 def get_db():
@@ -76,7 +79,9 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 
 
 @app.put("/country/update/{id}")
-async def update_country(id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)):
+async def update_country(
+    id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)
+):
     try:
         return crud.update_country(db, id, country)
     except Exception as e:

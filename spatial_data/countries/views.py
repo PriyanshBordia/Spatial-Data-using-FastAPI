@@ -23,10 +23,12 @@ def add_country(request):
             form = CountryForm(request.POST, instance=country)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect(reverse('home', args=()))
+                return HttpResponseRedirect(reverse("home", args=()))
             else:
                 form = CountryForm(instance=country)
-                return render(request, "countries/add_country.html", context={"form": form})
+                return render(
+                    request, "countries/add_country.html", context={"form": form}
+                )
         else:
             form = CountryForm(instance=country)
             return render(request, "countries/add_country.html", context={"form": form})

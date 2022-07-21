@@ -5,8 +5,11 @@ class Settings:
     PROJECT_NAME: str = "Spatial Data"
     PROJECT_VERSION: str = "1.0.0.0"
 
-    CONTACT: dict = {"name": "Priyansh Bordia",
-                     "url": "https://priyanshbordia.github.io", "email": ""}
+    CONTACT: dict = {
+        "name": "Priyansh Bordia",
+        "url": "https://priyanshbordia.github.io",
+        "email": "",
+    }
 
     POSTGRES_USER: str = str(os.getenv("DB_USERNAME"))
     POSTGRES_PASSWORD: str = str(os.getenv("DB_PASSWORD"))
