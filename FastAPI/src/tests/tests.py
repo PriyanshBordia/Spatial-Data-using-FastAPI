@@ -1,35 +1,77 @@
-from unittest import TestResult
-
 from fastapi.testclient import TestClient
 
-from app.main import app
+from ..app.main import app
 
 client = TestClient(app)
 
 
-def test_home():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"message": "API is fast.."}
+def test_home() -> bool:
+	response = client.get("/")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == True
+	assert response["meta"]["size"] == len(response["result"])
+	assert response["message"] == "API is fast.."
 
-"""
-{
-  "id": 256,
-  "admin": "Wakanda",
-  "iso_a3": "WKA",
-  "geom": "0000"
-}
-{
-  "id": 257,
-  "admin": "Atlantis",
-  "iso_a3": "ATL",
-  "geom": "00010001"
-}
-"""
-"""
-{
-    "geom": "0106000020E6100000010000000103000000010000001A000000362D7CD3CD7F51C098543BD7B8272940382D7CD3ED7B51C06810942C3E102940382D7CD32D7B51C0408D3ED7D8092940ACF97BD39B7A51C0707A3DD778FE2840705AD128557851C020A03FD738E82840A8B67CD31D7851C0181DEA81D3DA28406889277ED67851C0408D3ED7D8D5284004D97CD3297A51C030DE3BD7E8D52840342D7CD38D7B51C078673CD718DA28409E28D2287D7C51C0787A3DD778E12840382D7CD32D7B51C0787A3DD778E12840382D7CD32D7B51C0D0C541D7F8E428408AC1D128597D51C0704F42D728ED2840E6E3D128C58151C0005C982CBE0B2940623E7CD3138351C0B055ED81F30F294076A57CD3B78351C0C8163FD708132940AC44277EFE8351C0E8C541D7F8172940A028D228DD8351C0784F42D7281D2940E4E3D128458351C018DE3BD7E8252940B044277E1E8351C078FD922CDE2A2940B044277E5E8351C0E02FEB81333329404206D228D18351C0A8EA912C7E3A2940FE4AD228E98351C0E82FEB8133402940B044277E1E8351C0F0033ED7A8432940725AD128758051C0903C41D7C82B2940362D7CD3CD7F51C098543BD7B8272940",
-    "admin": "Atlantis",
-    "iso_a3": "ATL"
-}
-"""
+
+def test_country_id() -> bool:
+	response = client.get("/country/id/1")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == True
+	assert response["meta"]["size"] == len(response["result"])
+	assert response["result"][0]["id"] == 1
+
+	response = client.get("/country/id/0")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == False
+	assert response["error"]["code"] == ["Country with id: 0 does not exist."]
+
+
+def test_country_code() -> bool:
+	response = client.get("/country/code/ind")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == True
+	assert response["meta"]["size"] == len(response["result"])
+	assert response["result"][0]["code"] == "IND"
+
+	response = client.get("/country/code/aux")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == False
+	assert response["error"]["code"] == ["Country with code: aux does not exist."]
+
+
+def test_country_name() -> bool:
+	response = client.get("/country/name/India")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == True
+	assert response["meta"]["size"] == len(response["result"])
+	assert response["result"][0]["name"] == "India"
+
+	response = client.get("/country/name/Zulip")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == False
+	assert response["error"]["code"] == ["Country with name: Zulip does not exist."]
+
+
+def test_country_name_contains() -> bool:
+	response = client.get("/country/name/contains/ia")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == True
+	assert response["meta"]["size"] == len(response["result"])
+
+
+def test_countries() -> bool:
+	response = client.get("/countries")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == True
+	assert response["meta"]["size"] == len(response["result"])
+
+

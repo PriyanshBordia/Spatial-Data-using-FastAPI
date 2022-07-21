@@ -157,3 +157,8 @@ cython_debug/
 *.pdf
 *.ini
 alembic
+.flake8
+.hadolint.yaml
+.isort.cfg
+.markdownlint.yaml
+.shellcheckrc

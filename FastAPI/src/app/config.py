@@ -13,5 +13,6 @@ class Settings:
 	POSTGRES_DB: str = str(os.getenv("DB_NAME"))
 	DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
+	MODEL_NAME = "countries_country"
 
 settings = Settings()

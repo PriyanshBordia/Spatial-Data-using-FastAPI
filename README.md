@@ -21,6 +21,24 @@
 ~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln spatial_data
 ```
 
+#### Sample Input 
+
+{
+  "admin": "Wakanda",
+  "iso_a3": "WKA",
+}
+{
+  "admin": "Atlantis",
+  "iso_a3": "ATL",
+  "geom": "[[[[0.0, 0.0]]]]"
+}
+
+### Test
+
+```
+~ pytest src/tests/tests.py
+```
+
 #### ALIAS
 
 - image_name = spatial-data
@@ -34,9 +52,11 @@
 
 ##### References
 
-- [Tutorial](https://www.fastapitutorial.com/)
+- [FastAPI](https://www.fastapitutorial.com/)
+- [PostGIS](http://postgis.net/)
 - [Docker](https://testdriven.io/blog/fastapi-crud/)
 - [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
+- [2](https://github.com/jordaneremieff/django-fastapi-example/blob/main/django_fastapi/project/settings.py)
 
 ##### Todo
 

@@ -1,8 +1,8 @@
-from django.http import HttpResponse
-from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
-from ..db import crud, models, schemas, sessions
+from fastapi import Depends, FastAPI, HTTPException
+
+from ..db import crud, schemas, sessions
 from .config import settings
 
 # models.Base.metadata.create_all(bind=sessions.engine)
@@ -21,8 +21,10 @@ def get_db():
 
 @app.get("/")
 async def home():
-	response = crud.format_response()
-	return response
+	try:
+		return crud.success_response(data=[])
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/country/id/{id}")
@@ -49,6 +51,14 @@ async def get_country_name(name: str, db: Session = Depends(get_db)):
 		return HTTPException(status_code=400, detail=str(e))
 
 
+@app.get("/country/name/contains/{name}")
+async def get_country_name_contains(name: str, db: Session = Depends(get_db)):
+	try:
+		return crud.get_country_by_name_contains(db, name)
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
+
+		
 @app.get("/countries")
 async def get_all_countries(db: Session = Depends(get_db)):
 	try:
@@ -77,5 +87,13 @@ async def update_country(id: int, country: schemas.CountryCreate, db: Session = 
 async def delete_country(id: int, db: Session = Depends(get_db)):
 	try:
 		return crud.delete_country(db, id)
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/country/neighbors/{id}")
+async def get_neighbors(id: int, db: Session = Depends(get_db)):
+	try:
+		return crud.get_neighboring_countries(db, id)
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))

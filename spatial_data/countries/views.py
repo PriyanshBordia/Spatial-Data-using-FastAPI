@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from termcolor import cprint
 
-from .forms import UploadForm, CountryForm
+from .forms import CountryForm, UploadForm
 from .models import Country
 
 # Create your views here.
@@ -16,7 +16,7 @@ from .models import Country
 def home(request):
 	return render(request, "countries/home.html", context={})
 
-
+# 
 def add_country(request):
 	try:
 		country = Country()
