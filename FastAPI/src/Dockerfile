@@ -8,7 +8,7 @@ ENV DB_NAME spatial_data
 ENV DB_USERNAME priyansh
 ENV DB_PASSWORD priyanshbordia
 ENV DB_PORT 5432
-ENV DB_HOST localhost
+ENV DB_HOST database
 
 COPY ./requirements.txt /usr/src/app/requirements.txt
 
