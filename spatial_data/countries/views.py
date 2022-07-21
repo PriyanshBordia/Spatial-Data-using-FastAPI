@@ -1,11 +1,10 @@
 import json
 
 from django.contrib import messages
-from django.contrib.gis.geos import MultiPolygon, Polygon
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from termcolor import cprint
+from utils.utility import get_cleaned_data
 
 from .forms import CountryForm, UploadForm
 from .models import Country
@@ -16,7 +15,7 @@ from .models import Country
 def home(request):
 	return render(request, "countries/home.html", context={})
 
-# 
+
 def add_country(request):
 	try:
 		country = Country()
@@ -36,35 +35,18 @@ def add_country(request):
 		messages.error(request, message)
 		return HttpResponseRedirect("../")
 
+
 def upload(request):
 	try:
 		form = UploadForm()
 		if request.method == "POST":
 			form = UploadForm(request.POST)
 			data = json.load(request.FILES["geojson_file"])["features"]
-			for row in data:
-				properties = row["properties"]
-				geometry = row["geometry"]
-				print(properties)
-				# print(geometry)
-				admin = properties.get("ADMIN")
-				iso_a3 = properties.get("ISO_A3")
-				print(geometry.get("type"), len(geometry.get("coordinates")))
-				if geometry.get("type") == "Polygon":
-					points = [geometry.get("coordinates")]
-				elif geometry.get("type") == "MultiPolygon":
-					points = geometry.get("coordinates")
-				else:
-					cprint(f"{admin} Error", "red")
-				geom = MultiPolygon([Polygon(point[0]) for point in points])
-				# Country.objects.create(admin=admin, iso_a3=iso_a3, geom=geom)
+			data = get_cleaned_data(data)
+			Country.objects.bulk_create(data, batch_size=100)
 			messages.success(request, "success")
 		return render(request, "countries/upload.html", context={"form": form})
 	except Exception as e:
 		message = f"{e}"
 		messages.error(request, message)
 		return HttpResponseRedirect("../upload")
-
-
-def docs(request):
-	return HttpResponse("Hello")
