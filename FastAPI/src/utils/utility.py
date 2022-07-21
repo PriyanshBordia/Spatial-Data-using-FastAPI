@@ -15,7 +15,14 @@ def format(country: tuple) -> dict:
 
 def success_response(data: list, message="API is fast..") -> dict:
     try:
-        response = {"message": "", "meta": {"size": 0}, "result": [], "success": True}
+        response = {
+            "message": "",
+            "meta": {
+                "size": 0
+            },
+            "result": [],
+            "success": True
+        }
         response["message"] = message
         response["meta"]["size"] = len(data)
         response["result"].extend(data)

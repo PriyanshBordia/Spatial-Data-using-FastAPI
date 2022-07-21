@@ -16,5 +16,6 @@ class Country(CountryBase):
 
 
 class CountryCreate(CountryBase):
+
     class Config:
         orm_mode = False

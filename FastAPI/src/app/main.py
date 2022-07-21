@@ -75,7 +75,8 @@ async def get_all_countries(db: Session = Depends(get_db)):
 
 
 @app.post("/country/create/")
-async def create_country(country: schemas.CountryCreate, db: Session = Depends(get_db)):
+async def create_country(country: schemas.CountryCreate,
+                         db: Session = Depends(get_db)):
     try:
         return crud.insert_country(db, country)
     except Exception as e:
@@ -83,9 +84,9 @@ async def create_country(country: schemas.CountryCreate, db: Session = Depends(g
 
 
 @app.put("/country/update/{id}")
-async def update_country(
-    id: int, country: schemas.CountryCreate, db: Session = Depends(get_db)
-):
+async def update_country(id: int,
+                         country: schemas.CountryCreate,
+                         db: Session = Depends(get_db)):
     try:
         return crud.update_country(db, id, country)
     except Exception as e:
