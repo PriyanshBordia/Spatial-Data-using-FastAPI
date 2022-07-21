@@ -162,3 +162,4 @@ alembic
 .isort.cfg
 .markdownlint.yaml
 .shellcheckrc
+.trunk/
