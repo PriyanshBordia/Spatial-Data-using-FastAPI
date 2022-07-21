@@ -75,3 +75,23 @@ def test_countries() -> bool:
 	assert response["meta"]["size"] == len(response["result"])
 
 
+def test_create_country() -> bool:
+	pass
+
+def test_update_country() -> bool:
+	pass
+
+def test_delete_country() -> bool:
+	pass
+
+def test_get_neighbors() -> bool:
+	response = client.get("/country/neighbors/1")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == True
+	assert response["meta"]["size"] == len(response["result"])
+
+	response = client.get("/country/neighbors/0")
+	assert response.status_code == 200
+	response = response.json()
+	assert response["success"] == False
