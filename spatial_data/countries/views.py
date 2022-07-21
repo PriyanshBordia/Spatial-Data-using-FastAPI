@@ -6,7 +6,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from utils.utility import get_cleaned_data
 
-from .forms import CountryForm, UploadForm
+from .forms import CountryForm
+from .forms import UploadForm
 from .models import Country
 
 # Create your views here.
