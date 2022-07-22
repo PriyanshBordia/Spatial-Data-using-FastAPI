@@ -22,10 +22,3 @@ services:
 
 volumes:
   postgres_data:
-
-  # python3:
-  #   restart: always
-  #   build: .
-  #   container_name: "spatial-data-container"
-  #   working_dir: "/"
-  #   tty: true
