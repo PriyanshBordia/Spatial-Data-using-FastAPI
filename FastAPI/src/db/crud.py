@@ -2,7 +2,8 @@ from django.contrib.gis.geos import GEOSGeometry
 from sqlalchemy.orm import Session
 from utils.utility import *
 
-from . import models, schemas
+from . import models
+from . import schemas
 
 
 def get_country_by_id(db: Session, id: int) -> dict:
