@@ -5,14 +5,14 @@
 
 ### Repository on local machine:
 
-```
+```shell
 ~ gh repo clone PriyanshBordia/Spatial-Data-using-FastAPI
 ~ cd Spatial-Data-using-FastAPI
 ```
 
 ### Env vars
 
-```
+```shell
 ~ export SECRET_KEY=""
 ~ export DEBUG=True
 ~ export DB_NAME=[DB_NAME]
@@ -24,7 +24,7 @@
 
 ### Creating Virtual Env
 
-```
+```shell
 ~ python3 -m venv venv
 ~ source venv/bin/activate
 ~ pip install -r requirements.txt
@@ -32,7 +32,7 @@
 
 ### Docker Steps
 
-```
+```shell
 ~ docker login # Add credentials to promp
 ~ cd FastAPI
 ~ docker-compose -p spatial_data up -d --build
@@ -40,7 +40,8 @@
 ```
 
 ### Push image to Hub
-```
+
+```shell
 ~ docker build -t [image_name] .
 ~ docker tag [image_name]:[tag_name] [docker_username]:[repo]
 ~ docker push [docker_username]/[repo]
@@ -48,13 +49,13 @@
 
 ### Populate data to db
 
-```
+```shell
 ~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln data/geo-countries/archive/spatial_data
 ```
 
 #### Sample Input 
 
-```
+```json
 {
   "admin": "Wakanda",
   "iso_a3": "WKA",
@@ -69,7 +70,7 @@
 
 ### Test
 
-```
+```shell
 ~ cd FastAPI
 ~ pytest src/tests/tests.py
 ```
