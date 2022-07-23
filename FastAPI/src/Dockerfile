@@ -13,6 +13,7 @@ ENV DB_HOST database
 COPY ./requirements.txt /usr/src/app/requirements.txt
 
 RUN pip install --upgrade pip==22.2 \
+	&& pip install virtualenv==20.15.1 \
 	&& python -m venv venv \
 	&& source venv/bin/activate \
 	&& pip install --no-cache -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip
