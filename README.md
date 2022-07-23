@@ -33,9 +33,14 @@
 ### Docker Steps
 
 ```
-~ docker login # Add credentials to prompt
+~ docker login # Add credentials to promp
+~ cd FastAPI
 ~ docker-compose -p spatial_data up -d --build
-~ docker exec -it database psql --username=priyansh --dbname=spatial_data
+
+```
+
+### Push image to Hub
+```
 ~ docker build -t [image_name] .
 ~ docker tag [image_name]:[tag_name] [docker_username]:[repo]
 ~ docker push [docker_username]/[repo]
