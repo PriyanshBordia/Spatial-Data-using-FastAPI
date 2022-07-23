@@ -10,14 +10,26 @@ def format(country) -> dict:
         code = country.iso_a3
         geom = GEOSGeometry(str(country.geom)).geojson
         coordinates = geojson.loads(geom).get("coordinates")
-        return {"id": id, "name": admin, "code": code, "coordinates": coordinates}
+        return {
+            "id": id,
+            "name": admin,
+            "code": code,
+            "coordinates": coordinates
+        }
     except Exception as e:
         raise e
 
 
 def success_response(data: list, message="API is fast..") -> dict:
     try:
-        response = {"message": "", "meta": {"size": 0}, "result": [], "success": True}
+        response = {
+            "message": "",
+            "meta": {
+                "size": 0
+            },
+            "result": [],
+            "success": True
+        }
         response["message"] = message
         response["meta"]["size"] = len(data)
         response["result"].extend(data)
@@ -50,6 +62,8 @@ def populate_data():
             else:
                 print(f"Error: {admin} ")
             geom = geojson.MultiPolygon(points)
-            country = schemas.CountryCreate(admin=admin, iso_a3=iso_a3, geom=geom)
+            country = schemas.CountryCreate(admin=admin,
+                                            iso_a3=iso_a3,
+                                            geom=geom)
     except Exception as e:
         raise e
