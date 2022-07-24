@@ -36,7 +36,12 @@
 ~ docker login # Add credentials to promp
 ~ cd FastAPI
 ~ docker-compose -p spatial_data up -d --build
+```
 
+### URL
+
+```text
+> http://localhost:8002/docs
 ```
 
 ### Push image to Hub
