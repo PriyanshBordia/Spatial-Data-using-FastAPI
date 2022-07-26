@@ -1,6 +1,6 @@
 import geojson
 from ..db import schemas
-# from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import GEOSGeometry
 
 
 def format(country) -> dict:
@@ -28,7 +28,7 @@ def success_response(data: list, message="API is fast..") -> dict:
 
 def error_response(error: list) -> dict:
 	try:	
-		response = {"error": {"code": []}, "success": False}
+		response = {"error": {"message": []}, "success": False}
 		response["error"]["code"].extend(error)
 		return response
 	except Exception as e:

@@ -1,4 +1,4 @@
-# from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import GEOSGeometry
 from sqlalchemy.orm import Session
 from ..utils.utility import *
 
