@@ -1,4 +1,4 @@
-from app.config import settings
+from ..config import settings
 from geoalchemy2 import Geometry
 from sqlalchemy import Column, Integer, String
 

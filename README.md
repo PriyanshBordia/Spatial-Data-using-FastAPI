@@ -33,7 +33,7 @@
 ### Docker Steps
 
 ```shell
-~ docker login # Add credentials to promp
+~ docker login # Add credentials to prompt
 ~ cd FastAPI
 ~ docker-compose -p spatial_data up -d --build
 ```
@@ -64,12 +64,12 @@
 {
   "admin": "Wakanda",
   "iso_a3": "WKA",
-  "geom": "[[[[0.0, 0.0]]]]"
+  "geom": {"type": "Polygon", "coordinates": [ [ [0.0, 0.0] ] ] }
 }
 {
   "admin": "Atlantis",
   "iso_a3": "ATL",
-  "geom": "[[[[0.0, 0.0]]]]"
+  "geom": {"type": "Polygon", "coordinates": [ [ [1.0, 1.0] ] ] }
 }
 ```
 

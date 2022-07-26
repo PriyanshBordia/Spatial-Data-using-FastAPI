@@ -1,6 +1,6 @@
 import geojson
-from db import schemas
-from django.contrib.gis.geos import GEOSGeometry
+from ..db import schemas
+# from django.contrib.gis.geos import GEOSGeometry
 
 
 def format(country) -> dict:

@@ -1,4 +1,4 @@
-from db import crud, models, schemas, sessions
+from .db import crud, models, schemas, sessions
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
