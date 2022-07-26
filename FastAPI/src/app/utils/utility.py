@@ -1,6 +1,9 @@
+import os
+
 import geojson
-from ..db import schemas
 from django.contrib.gis.geos import GEOSGeometry
+
+from ..db import schemas
 
 
 def format(country) -> dict:
@@ -29,14 +32,17 @@ def success_response(data: list, message="API is fast..") -> dict:
 def error_response(error: list) -> dict:
 	try:	
 		response = {"error": {"message": []}, "success": False}
-		response["error"]["code"].extend(error)
+		response["error"]["message"].extend(error)
 		return response
 	except Exception as e:
 		raise e
 
 def populate_data():
 	try:
-		data = geojson.load(open("countries.geojson"))["features"]
+		path = str(os.getcwd()) + "/src/app/data/countries.geojson"
+		print(path)
+		data = geojson.load(open(path, "r"))["features"]
+		print(type(data))
 		for row in data:
 			properties = row["properties"]
 			geometry = row["geometry"]
@@ -48,7 +54,8 @@ def populate_data():
 				points = geometry.get("coordinates")
 			else:
 				print(f"Error: {admin} ")
-			geom = geojson.MultiPolygon(points)
+			geom = (GEOSGeometry(geojson.dumps(geometry)).hexewkb).decode()
 			country = schemas.CountryCreate(admin=admin, iso_a3=iso_a3, geom=geom)
+			print(country.admin)
 	except Exception as e:
 		raise e
