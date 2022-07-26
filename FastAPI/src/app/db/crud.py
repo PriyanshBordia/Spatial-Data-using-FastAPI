@@ -1,7 +1,7 @@
 from django.contrib.gis.geos import GEOSGeometry
 from sqlalchemy.orm import Session
-from ..utils.utility import *
 
+from ..utils.utility import *
 from . import models, schemas
 
 
