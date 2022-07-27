@@ -17,8 +17,10 @@ RUN pip install virtualenv
 RUN python -m venv venv
 RUN source venv/bin/activate
 RUN pip install -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip
-RUN apt-get install -y gdal-bin
+RUN apk add gdal
+RUN apk add geos
 
 COPY . /usr/src/app/
 
-# CMD ["echo", "Hi, Captain.!"]
+CMD ["echo", "Hi, Captain.!"]
+# CMD ["uvicorn", "app.main:app", "--reload", "--workers", "1", "--host", "0.0.0.0", "--port", "8000"]

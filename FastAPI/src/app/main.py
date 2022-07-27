@@ -1,8 +1,9 @@
-from .db import crud, models, schemas, sessions
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from .config import settings
+from .db import crud, models, schemas, sessions
+from .utils.utility import populate_data
 
 models.Base.metadata.create_all(bind=sessions.engine)
 
@@ -25,6 +26,13 @@ async def home():
 	except Exception as e:
 		return HTTPException(status_code=400, detail=str(e))
 
+@app.get("/populate_data")
+async def populate_data():
+	try:
+		populate_data()
+		return crud.success_response(data=[])
+	except Exception as e:
+		return HTTPException(status_code=400, detail=str(e))
 
 @app.get("/country/id/{id}")
 async def get_country_id(id: int, db: Session = Depends(get_db)):
