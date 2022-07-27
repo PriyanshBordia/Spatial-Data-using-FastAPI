@@ -17,6 +17,7 @@ RUN pip install virtualenv
 RUN python -m venv venv
 RUN source venv/bin/activate
 RUN pip install -r /usr/src/app/requirements.txt && rm -rf /root/.cache/pip
+RUN apk add binutils
 RUN apk add gdal
 RUN apk add geos
 
