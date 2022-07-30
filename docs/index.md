@@ -3,7 +3,7 @@
 
 ## Setup
 
-### Repository on local machine:
+### Repository on local machine
 
 ```shell
 ~ gh repo clone PriyanshBordia/Spatial-Data-using-FastAPI
@@ -58,7 +58,7 @@
 ~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln data/geo-countries/archive/spatial_data
 ```
 
-#### Sample Input 
+### Sample Input 
 
 ```json
 {
