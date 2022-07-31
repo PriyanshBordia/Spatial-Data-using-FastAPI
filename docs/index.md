@@ -1,6 +1,5 @@
 # Spatial Data using FastAPI
 
-
 ## Setup
 
 ### Repository on local machine
