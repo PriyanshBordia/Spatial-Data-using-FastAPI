@@ -16,7 +16,7 @@ django-bootstrap4==22.1
 django-extensions==3.2.0
 django-fontawesome-5==1.0.18
 dnspython==2.2.1
-executing==0.9.0
+executing==0.10.0
 fastapi==0.79.0
 GeoAlchemy2==0.12.2
 geojson==2.5.0
@@ -50,7 +50,7 @@ sniffio==1.2.0
 soupsieve==2.3.2.post1
 SQLAlchemy==1.4.39
 sqlparse==0.4.2
-stack-data==0.3.0
+stack-data==0.4.0
 starlette==0.20.4
 termcolor==1.1.0
 termcolor2==0.0.3
