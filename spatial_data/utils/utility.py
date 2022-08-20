@@ -1,6 +1,6 @@
 from django.contrib.gis.geos import MultiPolygon, Polygon
 
-from spatial_data.countries.models import Country
+from countries.models import Country
 
 
 def get_cleaned_data(data):
