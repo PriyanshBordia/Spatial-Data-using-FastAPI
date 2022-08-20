@@ -50,7 +50,7 @@ sniffio==1.2.0
 soupsieve==2.3.2.post1
 SQLAlchemy==1.4.39
 sqlparse==0.4.2
-stack-data==0.3.0
+stack-data==0.4.0
 starlette==0.20.4
 termcolor==1.1.0
 termcolor2==0.0.3
