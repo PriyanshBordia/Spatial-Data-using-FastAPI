@@ -29,7 +29,7 @@ jedi==0.18.1
 matplotlib-inline==0.1.6
 packaging==21.3
 parso==0.8.3
-pathspec==0.9.0
+pathspec==0.10.0
 pexpect==4.8.0
 pickleshare==0.7.5
 platformdirs==2.5.2
