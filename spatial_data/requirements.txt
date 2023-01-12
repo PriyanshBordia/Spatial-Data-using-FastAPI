@@ -23,7 +23,7 @@ geojson==2.5.0
 greenlet==2.0.1
 h11==0.14.0
 idna==3.4
-iniconfig==1.1.1
+iniconfig==2.0.0
 ipython==8.7.0
 jedi==0.18.2
 matplotlib-inline==0.1.6
@@ -52,7 +52,7 @@ SQLAlchemy==1.4.45
 sqlparse==0.4.3
 stack-data==0.6.2
 starlette==0.23.1
-termcolor==2.1.1
+termcolor==2.2.0
 termcolor2==0.0.3
 toml==0.10.2
 tomli==2.0.1
