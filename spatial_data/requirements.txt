@@ -32,7 +32,7 @@ parso==0.8.3
 pathspec==0.10.3
 pexpect==4.8.0
 pickleshare==0.7.5
-platformdirs==2.6.2
+platformdirs==3.0.0
 pluggy==1.0.0
 prompt-toolkit==3.0.36
 psycopg2-binary==2.9.5
