@@ -52,7 +52,7 @@ SQLAlchemy==2.0.9
 sqlparse==0.4.4
 stack-data==0.6.2
 starlette==0.26.1
-termcolor==2.2.0
+termcolor==2.3.0
 termcolor2==0.0.3
 toml==0.10.2
 tomli==2.0.1
