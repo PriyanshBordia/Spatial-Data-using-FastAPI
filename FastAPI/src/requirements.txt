@@ -49,7 +49,7 @@ six==1.16.0
 sniffio==1.2.0
 soupsieve==2.3.2.post1
 SQLAlchemy==1.4.39
-sqlparse==0.4.2
+sqlparse==0.4.4
 stack-data==0.3.0
 starlette==0.25.0
 toml==0.10.2
