@@ -24,7 +24,7 @@ greenlet==2.0.2
 h11==0.14.0
 idna==3.4
 iniconfig==2.0.0
-ipython==8.13.1
+ipython==8.13.2
 jedi==0.18.2
 matplotlib-inline==0.1.6
 packaging==23.1
