@@ -42,7 +42,7 @@ py==1.11.0
 pycodestyle==2.10.0
 pydantic==1.10.9
 Pygments==2.15.1
-pyparsing==3.0.9
+pyparsing==3.1.0
 pytest==7.3.2
 requests==2.31.0
 six==1.16.0
