@@ -15,7 +15,7 @@ django-bootstrap==0.2.4
 django-bootstrap4==23.2
 django-extensions==3.2.3
 django-fontawesome-5==1.0.18
-dnspython==2.3.0
+dnspython==2.4.0
 executing==1.2.0
 fastapi==0.100.0
 GeoAlchemy2==0.14.0
