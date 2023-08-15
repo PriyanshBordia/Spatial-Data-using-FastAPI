@@ -10,14 +10,14 @@ certifi==2023.7.22
 charset-normalizer==3.2.0
 click==8.1.6
 decorator==5.1.1
-Django==4.2.3
+Django==4.2.4
 django-bootstrap==0.2.4
 django-bootstrap4==23.2
 django-extensions==3.2.3
 django-fontawesome-5==1.0.18
 dnspython==2.4.0
 executing==1.2.0
-fastapi==0.101.0
+fastapi==0.101.1
 GeoAlchemy2==0.14.1
 geojson==3.0.1
 greenlet==2.0.2
