@@ -17,7 +17,7 @@ django-extensions==3.2.3
 django-fontawesome-5==1.0.18
 dnspython==2.4.2
 executing==2.0.0
-fastapi==0.103.1
+fastapi==0.103.2
 GeoAlchemy2==0.14.1
 geojson==3.0.1
 greenlet==2.0.2
