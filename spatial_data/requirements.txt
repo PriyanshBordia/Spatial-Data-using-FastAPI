@@ -40,8 +40,8 @@ ptyprocess==0.7.0
 pure-eval==0.2.2
 py==1.11.0
 pycodestyle==2.11.1
-pydantic==2.4.2
 Pygments==2.17.2
+pydantic==2.5.2
 pyparsing==3.1.1
 pytest==7.4.3
 requests==2.31.0
@@ -52,7 +52,7 @@ SQLAlchemy==2.0.23
 sqlparse==0.4.4
 stack-data==0.6.2
 starlette==0.32.0.post1
-termcolor==2.3.0
+termcolor==2.4.0
 termcolor2==0.0.3
 toml==0.10.2
 tomli==2.0.1
