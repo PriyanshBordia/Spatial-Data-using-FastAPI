@@ -34,7 +34,7 @@ pexpect==4.9.0
 pickleshare==0.7.5
 platformdirs==4.0.0
 pluggy==1.3.0
-prompt-toolkit==3.0.39
+prompt-toolkit==3.0.43
 psycopg2-binary==2.9.9
 ptyprocess==0.7.0
 pure-eval==0.2.2
