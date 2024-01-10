@@ -20,7 +20,7 @@ executing==2.0.1
 fastapi==0.104.1
 GeoAlchemy2==0.14.3
 geojson==3.0.1
-greenlet==3.0.2
+greenlet==3.0.3
 h11==0.14.0
 idna==3.6
 iniconfig==2.0.0
