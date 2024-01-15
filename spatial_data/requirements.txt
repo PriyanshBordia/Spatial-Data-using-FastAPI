@@ -12,7 +12,7 @@ click==8.1.7
 decorator==5.1.1
 Django==5.0.1
 django-bootstrap==0.2.4
-django-bootstrap4==23.2
+django-bootstrap4==23.4
 django-extensions==3.2.3
 django-fontawesome-5==1.0.18
 dnspython==2.4.2
