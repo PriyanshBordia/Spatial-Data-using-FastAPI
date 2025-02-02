@@ -3,59 +3,59 @@
 
 ## Setup
 
-### Repository on local machine:
+### Clone repository to local machine:
 
 ```shell
-~ gh repo clone PriyanshBordia/Spatial-Data-using-FastAPI
-~ cd Spatial-Data-using-FastAPI
+gh repo clone PriyanshBordia/Spatial-Data-using-FastAPI
+cd Spatial-Data-using-FastAPI
 ```
 
-### Env vars
+### Set env vars
 
 ```shell
-~ export SECRET_KEY=""
-~ export DEBUG=True
-~ export DB_NAME=[DB_NAME]
-~ export DB_USERNAME=[DB_USERNAME]
-~ export DB_PASSWORD=[DB_PASSWORD]
-~ export DB_PORT=5432
-~ export DB_HOST=[DB_HOST]
+export SECRET_KEY=""
+export DEBUG=True               # Set to false in case you want to replicate production env
+export DB_NAME=[DB_NAME]
+export DB_USERNAME=[DB_USERNAME]
+export DB_PASSWORD=[DB_PASSWORD]
+export DB_PORT=5432
+export DB_HOST=[DB_HOST]
 ```
 
-### Creating Virtual Env
+### Create Virtual Env
 
 ```shell
-~ python3 -m venv venv
-~ source venv/bin/activate
-~ pip install -r requirements.txt
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ### Docker Steps
 
 ```shell
-~ docker login # Add credentials to prompt
-~ cd FastAPI
-~ docker-compose -p spatial_data up -d --build
+docker login # Add credentials to prompt
+cd FastAPI
+docker-compose -p spatial_data up -d --build
 ```
 
 ### URL
 
 ```text
-> http://localhost:8002/docs
+http://localhost:8002/docs
 ```
 
 ### Push image to Hub
 
 ```shell
-~ docker build -t [image_name] .
-~ docker tag [image_name]:[tag_name] [docker_username]:[repo]
-~ docker push [docker_username]/[repo]
+docker build -t [image_name] .
+docker tag [image_name]:[tag_name] [docker_username]:[repo]
+docker push [docker_username]/[repo]
 ```
 
 ### Populate data to db
 
 ```shell
-~ ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln data/geo-countries/archive/spatial_data
+ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln data/geo-countries/archive/spatial_data
 ```
 
 #### Sample Input 
@@ -68,17 +68,17 @@
 }
 ```
 
-### Test
+### Run Tests Manually
 
 ```shell
-~ cd FastAPI
-~ pytest src/tests/tests.py
+cd FastAPI
+pytest src/tests/tests.py
 ```
 
 #### ALIAS
 
-- image_name = spatial-data
-- tag_name = unique name given to an build
+- image_name = `spatial-data`
+- tag_name = unique name given to an build (you can use `latest`)
 - username = PostgreSQL account username
 - password = PostgreSQL account password
 
