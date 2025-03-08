@@ -1,6 +1,6 @@
 anyio==4.8.0
 appnope==0.1.4
-asgiref==3.7.2
+asgiref==3.8.1
 asttokens==3.0.0
 attrs==23.2.0
 autopep8==2.3.2
