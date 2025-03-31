@@ -18,7 +18,7 @@ django-fontawesome-5==1.0.18
 dnspython==2.7.0
 executing==2.2.0
 fastapi==0.115.12
-GeoAlchemy2==0.17.0
+GeoAlchemy2==0.17.1
 geojson==3.2.0
 greenlet==3.0.3
 h11==0.14.0
