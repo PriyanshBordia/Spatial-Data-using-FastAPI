@@ -26,7 +26,7 @@ idna==3.7
 iniconfig==2.0.0
 ipython==9.0.1
 jedi==0.19.2
-matplotlib-inline==0.1.6
+matplotlib-inline==0.1.7
 packaging==24.2
 parso==0.8.4
 pathspec==0.12.1
