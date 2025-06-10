@@ -44,7 +44,7 @@ pydantic==1.10.13
 Pygments==2.15.0
 pyparsing==3.0.9
 pytest==7.2.0
-requests==2.32.2
+requests==2.32.4
 six==1.16.0
 sniffio==1.2.0
 soupsieve==2.3.2.post1
