@@ -51,7 +51,7 @@ soupsieve==2.7
 SQLAlchemy==2.0.41
 sqlparse==0.5.3
 stack-data==0.6.3
-starlette==0.40.0
+starlette==0.47.2
 termcolor==3.1.0
 termcolor==3.1.0
 termcolor2==0.0.3
