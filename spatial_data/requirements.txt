@@ -41,7 +41,7 @@ pure-eval==0.2.3
 py==1.11.0
 pycodestyle==2.14.0
 Pygments==2.19.2
-pydantic==2.11.9
+pydantic==2.12.3
 pyparsing==3.2.5
 pytest==8.4.2
 requests==2.32.5
