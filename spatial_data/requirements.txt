@@ -35,7 +35,7 @@ pickleshare==0.7.5
 platformdirs==4.4.0
 pluggy==1.6.0
 prompt-toolkit==3.0.52
-psycopg2-binary==2.9.10
+psycopg2-binary==2.9.11
 ptyprocess==0.7.0
 pure-eval==0.2.3
 py==1.11.0
