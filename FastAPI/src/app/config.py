@@ -16,4 +16,6 @@ class Settings:
 
 	MODEL_NAME = "countries_country"
 
+	API_KEY: str = os.getenv("API_KEY", "")
+
 settings = Settings()

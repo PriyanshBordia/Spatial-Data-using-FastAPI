@@ -15,7 +15,8 @@ def get_cleaned_data(data):
 		elif geometry.get("type") == "MultiPolygon":
 			points = geometry.get("coordinates")
 		else:
-			print(f"Error: {admin} ")
+			print(f"Error: Unsupported geometry type for {admin}, skipping.")
+			continue
 		geom = MultiPolygon([Polygon(point[0]) for point in points])
 		cleaned_data.append(Country(admin=admin, iso_a3=iso_a3, geom=geom))
 	return cleaned_data

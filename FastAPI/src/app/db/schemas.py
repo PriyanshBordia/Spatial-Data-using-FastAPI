@@ -1,20 +1,16 @@
-from geojson import MultiPolygon
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class CountryBase(BaseModel):
 	admin: str
 	iso_a3: str
-	geom: MultiPolygon
+	geom: dict
 
 
 class Country(CountryBase):
 	id: int
-
-	class Config:
-		orm_mode = True
+	model_config = ConfigDict(from_attributes=True)
 
 
 class CountryCreate(CountryBase):
-	class Config:
-		orm_mode = False
+	pass

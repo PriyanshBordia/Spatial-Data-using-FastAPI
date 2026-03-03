@@ -26,7 +26,7 @@ def test_country_id() -> bool:
 	assert response.status_code == 200
 	response = response.json()
 	assert response["success"] == False
-	assert response["error"]["code"] == ["Country with id: 0 does not exist."]
+	assert response["error"]["message"] == ["Country with id: 0 does not exist."]
 
 
 def test_country_code() -> bool:
@@ -41,7 +41,7 @@ def test_country_code() -> bool:
 	assert response.status_code == 200
 	response = response.json()
 	assert response["success"] == False
-	assert response["error"]["code"] == ["Country with code: aux does not exist."]
+	assert response["error"]["message"] == ["Country with code: aux does not exist."]
 
 
 def test_country_name() -> bool:
@@ -56,7 +56,7 @@ def test_country_name() -> bool:
 	assert response.status_code == 200
 	response = response.json()
 	assert response["success"] == False
-	assert response["error"]["code"] == ["Country with name: Zulip does not exist."]
+	assert response["error"]["message"] == ["Country with name: Zulip does not exist."]
 
 
 def test_country_name_contains() -> bool:

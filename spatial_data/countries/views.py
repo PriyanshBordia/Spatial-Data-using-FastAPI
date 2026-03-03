@@ -9,8 +9,6 @@ from utils.utility import get_cleaned_data
 from .forms import CountryForm, UploadForm
 from .models import Country
 
-# Create your views here.
-
 
 def home(request):
 	return render(request, "countries/home.html", context={})
@@ -40,8 +38,14 @@ def upload(request):
 	try:
 		form = UploadForm()
 		if request.method == "POST":
-			form = UploadForm(request.POST)
-			data = json.load(request.FILES["geojson_file"])["features"]
+			form = UploadForm(request.POST, request.FILES)
+			if not form.is_valid():
+				return render(request, "countries/upload.html", context={"form": form})
+			uploaded_file = request.FILES["geojson_file"]
+			if not uploaded_file.name.endswith(".geojson") and not uploaded_file.name.endswith(".json"):
+				messages.error(request, "Only .geojson and .json files are accepted.")
+				return render(request, "countries/upload.html", context={"form": form})
+			data = json.load(uploaded_file)["features"]
 			data = get_cleaned_data(data)
 			Country.objects.bulk_create(data, batch_size=100)
 			messages.success(request, "success")

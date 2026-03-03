@@ -21,9 +21,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
 
 # Application definition
 
@@ -82,7 +82,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.getenv("DB_NAME"),
-        "USERNAME": os.getenv("DB_USERNAME"),
+        "USER": os.getenv("DB_USERNAME"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "PORT": os.getenv("DB_PORT"),
         "HOST": os.getenv("DB_HOSTNAME"),
@@ -132,3 +132,12 @@ STATIC_URL = "/static/"
 # SPATIALITE_LIBRARY_PATH = "/usr/local/lib/mod_spatialite.dylib"
 # GDAL_LIBRARY_PATH = "/home/sue/local/lib/libgdal.so"
 # GEOS_LIBRARY_PATH = "/home/bob/local/lib/libgeos_c.so"
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

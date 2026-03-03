@@ -1,61 +1,60 @@
 import os
 
 import geojson
-from django.contrib.gis.geos import GEOSGeometry
+from geoalchemy2.shape import from_shape, to_shape
+from shapely.geometry import MultiPolygon as ShapelyMultiPolygon
+from shapely.geometry import mapping, shape
 
-from ..db import schemas
+from ..db import models
 
 
-def format(country) -> dict:
-	try:
-		id = country.id
-		admin = country.admin
-		code = country.iso_a3
-		geom = GEOSGeometry(str(country.geom)).geojson
-		coordinates = geojson.loads(geom).get("coordinates")
-		return {"id": id, "name": admin, "code": code, "coordinates": coordinates}
-	except Exception as e:
-		raise e
+def format_country(country) -> dict:
+	geom = to_shape(country.geom)
+	coordinates = mapping(geom).get("coordinates")
+	return {"id": country.id, "name": country.admin, "code": country.iso_a3, "coordinates": coordinates}
+
+
+def normalize_geometry(geometry_dict):
+	"""Convert a GeoJSON geometry dict to a WKBElement for DB storage.
+	Converts Polygon to MultiPolygon. Returns None for unsupported types."""
+	geom_type = geometry_dict.get("type")
+	if geom_type == "Polygon":
+		geometry_dict = {
+			"type": "MultiPolygon",
+			"coordinates": [geometry_dict.get("coordinates")]
+		}
+	elif geom_type != "MultiPolygon":
+		return None
+	geom_shape = shape(geometry_dict)
+	return from_shape(geom_shape, srid=4326)
 
 
 def success_response(data: list, message="API is fast..") -> dict:
-	try:
-		response = {"message": "", "meta": {"size": 0}, "result": [], "success": True}
-		response["message"] = message
-		response["meta"]["size"] = len(data)
-		response["result"].extend(data)
-		return response
-	except Exception as e:
-		raise e
+	response = {"message": "", "meta": {"size": 0}, "result": [], "success": True}
+	response["message"] = message
+	response["meta"]["size"] = len(data)
+	response["result"].extend(data)
+	return response
 
 
 def error_response(error: list) -> dict:
-	try:	
-		response = {"error": {"message": []}, "success": False}
-		response["error"]["message"].extend(error)
-		return response
-	except Exception as e:
-		raise e
+	response = {"error": {"message": []}, "success": False}
+	response["error"]["message"].extend(error)
+	return response
 
-def populate_data():
-	try:
-		path = str(os.getcwd()) + "/src/app/data/countries.geojson"
-		print(path)
-		data = geojson.load(open(path, "r"))["features"]
-		print(type(data))
-		for row in data:
-			properties = row["properties"]
-			geometry = row["geometry"]
-			admin = properties.get("ADMIN")
-			iso_a3 = properties.get("ISO_A3")
-			if geometry.get("type") == "Polygon":
-				points = [geometry.get("coordinates")]
-			elif geometry.get("type") == "MultiPolygon":
-				points = geometry.get("coordinates")
-			else:
-				print(f"Error: {admin} ")
-			geom = (GEOSGeometry(geojson.dumps(geometry)).hexewkb).decode()
-			country = schemas.CountryCreate(admin=admin, iso_a3=iso_a3, geom=geom)
-			print(country.admin)
-	except Exception as e:
-		raise e
+
+def populate_data(db):
+	path = str(os.getcwd()) + "/src/app/data/countries.geojson"
+	with open(path, "r") as f:
+		data = geojson.load(f)["features"]
+	for row in data:
+		properties = row["properties"]
+		geometry = row["geometry"]
+		admin = properties.get("ADMIN")
+		iso_a3 = properties.get("ISO_A3")
+		geom_shape = shape(geometry)
+		if geom_shape.geom_type == "Polygon":
+			geom_shape = ShapelyMultiPolygon([geom_shape])
+		wkb_element = from_shape(geom_shape, srid=4326)
+		db.add(models.Country(admin=admin, iso_a3=iso_a3, geom=wkb_element))
+	db.commit()

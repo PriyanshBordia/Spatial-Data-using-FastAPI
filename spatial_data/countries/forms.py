@@ -9,9 +9,6 @@ class CountryForm(forms.ModelForm):
 		model = Country
 		fields = '__all__'
 
-class UploadForm(forms.ModelForm):
-    geojson_file = forms.FileField()
 
-    class Meta:
-        model = Country
-        fields = ["geojson_file"]
+class UploadForm(forms.Form):
+	geojson_file = forms.FileField()
