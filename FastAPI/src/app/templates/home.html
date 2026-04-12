@@ -7,24 +7,105 @@
 <style>
 	html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
 
+	/* ─── Theme Variables ─────────────────────────────────── */
+	:root {
+		--bg: #f0f2f5;
+		--globe-color: #e8eaed;
+		--globe-emissive: #e8eaed;
+		--atmo-color: #e0e0e0;
+		--stroke: #fff;
+		--side: rgba(0,0,0,0.05);
+		--highlight: #1a1a2e;
+
+		--sidebar-bg: #fff;
+		--sidebar-shadow: rgba(0,0,0,0.1);
+		--sidebar-border: #e9ecef;
+		--text-primary: #212529;
+		--text-secondary: #6c757d;
+		--text-muted: #adb5bd;
+		--badge-bg: #e9ecef;
+		--badge-text: #495057;
+		--hover-bg: #f8f9fa;
+
+		--nav-bg: #f8f9fa;
+		--nav-text: rgba(0,0,0,0.5);
+		--nav-brand: rgba(0,0,0,0.9);
+		--nav-border: #dee2e6;
+
+		--toggle-bg: rgba(0,0,0,0.08);
+		--toggle-icon: #495057;
+	}
+
+	body.dark {
+		--bg: #0a0a1a;
+		--globe-color: #1a1a2e;
+		--globe-emissive: #0d0d1a;
+		--atmo-color: #2a2a4a;
+		--stroke: rgba(255,255,255,0.15);
+		--side: rgba(255,255,255,0.03);
+		--highlight: #e2b714;
+
+		--sidebar-bg: #141428;
+		--sidebar-shadow: rgba(0,0,0,0.5);
+		--sidebar-border: #2a2a4a;
+		--text-primary: #e8e8f0;
+		--text-secondary: #8888a8;
+		--text-muted: #5a5a7a;
+		--badge-bg: #2a2a4a;
+		--badge-text: #b0b0d0;
+		--hover-bg: #1e1e38;
+
+		--nav-bg: #0e0e20;
+		--nav-text: rgba(255,255,255,0.55);
+		--nav-brand: rgba(255,255,255,0.9);
+		--nav-border: #2a2a4a;
+
+		--toggle-bg: rgba(255,255,255,0.1);
+		--toggle-icon: #b0b0d0;
+	}
+
+	/* ─── Globe ───────────────────────────────────────────── */
 	#globe-container {
 		position: fixed;
 		top: 56px;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: #f0f2f5;
+		background: var(--bg);
 	}
 
+	/* ─── Dark Mode Toggle ────────────────────────────────── */
+	#theme-toggle {
+		position: fixed;
+		bottom: 20px;
+		left: 20px;
+		z-index: 1000;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		border: none;
+		background: var(--toggle-bg);
+		color: var(--toggle-icon);
+		font-size: 1.3rem;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background 0.2s, color 0.2s;
+		backdrop-filter: blur(8px);
+	}
+	#theme-toggle:hover { opacity: 0.8; }
+
+	/* ─── Sidebar ─────────────────────────────────────────── */
 	#sidebar {
 		position: fixed;
 		top: 56px;
 		right: -380px;
 		width: 380px;
 		height: calc(100vh - 56px);
-		background: #fff;
-		box-shadow: -4px 0 20px rgba(0,0,0,0.1);
-		transition: right 0.3s ease;
+		background: var(--sidebar-bg);
+		box-shadow: -4px 0 20px var(--sidebar-shadow);
+		transition: right 0.3s ease, background 0.3s, box-shadow 0.3s;
 		z-index: 999;
 		overflow-y: auto;
 		display: flex;
@@ -34,7 +115,7 @@
 
 	.sidebar-header {
 		padding: 24px 24px 16px;
-		border-bottom: 1px solid #e9ecef;
+		border-bottom: 1px solid var(--sidebar-border);
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
@@ -43,26 +124,26 @@
 		margin: 0;
 		font-size: 1.5rem;
 		font-weight: 700;
-		color: #212529;
+		color: var(--text-primary);
 		line-height: 1.2;
 	}
 	.sidebar-close {
 		background: none;
 		border: none;
 		font-size: 1.5rem;
-		color: #6c757d;
+		color: var(--text-secondary);
 		cursor: pointer;
 		padding: 0;
 		line-height: 1;
 	}
-	.sidebar-close:hover { color: #212529; }
+	.sidebar-close:hover { color: var(--text-primary); }
 
 	.sidebar-body { padding: 16px 24px 24px; flex: 1; }
 
 	.country-code {
 		display: inline-block;
-		background: #e9ecef;
-		color: #495057;
+		background: var(--badge-bg);
+		color: var(--badge-text);
 		padding: 2px 10px;
 		border-radius: 4px;
 		font-size: 0.85rem;
@@ -71,7 +152,7 @@
 		margin-top: 8px;
 	}
 	.country-id {
-		color: #adb5bd;
+		color: var(--text-muted);
 		font-size: 0.8rem;
 		margin-top: 4px;
 	}
@@ -81,7 +162,7 @@
 		font-size: 0.85rem;
 		text-transform: uppercase;
 		letter-spacing: 1px;
-		color: #6c757d;
+		color: var(--text-secondary);
 		margin-bottom: 12px;
 	}
 
@@ -94,37 +175,38 @@
 		transition: background 0.15s;
 		margin-bottom: 2px;
 	}
-	.neighbor-item:hover { background: #f8f9fa; }
-	.neighbor-name { flex: 1; font-weight: 500; color: #212529; }
+	.neighbor-item:hover { background: var(--hover-bg); }
+	.neighbor-name { flex: 1; font-weight: 500; color: var(--text-primary); }
 	.neighbor-code {
 		font-size: 0.8rem;
-		color: #6c757d;
+		color: var(--text-secondary);
 		font-weight: 600;
 		letter-spacing: 0.5px;
 	}
 	.neighbor-arrow {
 		margin-left: 8px;
-		color: #adb5bd;
+		color: var(--text-muted);
 		font-size: 0.9rem;
 	}
 
 	.neighbors-loading {
-		color: #6c757d;
+		color: var(--text-secondary);
 		font-style: italic;
 		font-size: 0.9rem;
 	}
 	.no-neighbors {
-		color: #adb5bd;
+		color: var(--text-muted);
 		font-size: 0.9rem;
 	}
 
+	/* ─── Loading Overlay ─────────────────────────────────── */
 	#loading-overlay {
 		position: fixed;
 		top: 56px;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: #f0f2f5;
+		background: var(--bg);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -134,7 +216,20 @@
 	#loading-overlay.hidden { opacity: 0; pointer-events: none; }
 	.loading-text {
 		font-size: 1.1rem;
-		color: #6c757d;
+		color: var(--text-secondary);
+	}
+
+	/* ─── Navbar Override for Dark Mode ────────────────────── */
+	body.dark .navbar {
+		background: var(--nav-bg) !important;
+		border-color: var(--nav-border) !important;
+	}
+	body.dark .navbar-brand { color: var(--nav-brand) !important; }
+	body.dark .nav-link { color: var(--nav-text) !important; }
+	body.dark .nav-link:hover { color: var(--text-primary) !important; }
+	body.dark .navbar-toggler { border-color: var(--nav-border); }
+	body.dark .navbar-toggler-icon {
+		filter: invert(1) brightness(0.7);
 	}
 </style>
 {% endblock %}
@@ -147,6 +242,8 @@
 <div id="loading-overlay">
 	<div class="loading-text">Loading countries...</div>
 </div>
+
+<button id="theme-toggle" title="Toggle dark mode">&#9790;</button>
 
 <div id="sidebar">
 	<div class="sidebar-header">
@@ -167,43 +264,95 @@
 
 <script>
 (function() {
-	const COLORS = [
-		'#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
-		'#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac'
-	];
-	const HIGHLIGHT_COLOR = '#1a1a2e';
-	const GLOBE_BG = '#f0f2f5';
+	/* ─── Theme ───────────────────────────────────────── */
+	const LIGHT = {
+		colors: ['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#edc948','#b07aa1','#ff9da7','#9c755f','#bab0ac'],
+		highlight: '#1a1a2e',
+		bg: '#f0f2f5',
+		globe: '#e8eaed',
+		emissive: '#e8eaed',
+		emissiveIntensity: 0.1,
+		atmo: '#e0e0e0',
+		stroke: '#fff',
+		side: 'rgba(0,0,0,0.05)',
+		icon: '\u263E'
+	};
+	const DARK = {
+		colors: ['#5b9bd5','#ff8c42','#ff6b6b','#6bcfcf','#7bc67e','#ffd93d','#c98bdb','#ff7eb3','#d4a373','#8ecae6'],
+		highlight: '#e2b714',
+		bg: '#0a0a1a',
+		globe: '#1a1a2e',
+		emissive: '#0d0d1a',
+		emissiveIntensity: 0.05,
+		atmo: '#2a2a4a',
+		stroke: 'rgba(255,255,255,0.15)',
+		side: 'rgba(255,255,255,0.03)',
+		icon: '\u2600'
+	};
 
+	let isDark = localStorage.getItem('theme') === 'dark';
+	let theme = isDark ? DARK : LIGHT;
 	let globe;
 	let countriesData = [];
 	let selectedId = null;
 
+	function applyTheme() {
+		theme = isDark ? DARK : LIGHT;
+		document.body.classList.toggle('dark', isDark);
+		document.getElementById('theme-toggle').textContent = theme.icon;
+		localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+		if (!globe) return;
+
+		globe.backgroundColor(theme.bg)
+			.atmosphereColor(theme.atmo)
+			.polygonStrokeColor(() => theme.stroke)
+			.polygonSideColor(() => theme.side)
+			.polygonCapColor(d => {
+				if (d.properties.id === selectedId) return theme.highlight;
+				return theme.colors[d.properties.id % theme.colors.length];
+			});
+
+		const mat = globe.globeMaterial();
+		mat.color.set(theme.globe);
+		mat.emissive.set(theme.emissive);
+		mat.emissiveIntensity = theme.emissiveIntensity;
+	}
+
+	document.getElementById('theme-toggle').addEventListener('click', () => {
+		isDark = !isDark;
+		applyTheme();
+	});
+
+	/* ─── Globe Init ──────────────────────────────────── */
 	async function init() {
+		applyTheme();
+
 		const container = document.getElementById('globe-container');
 
 		globe = Globe()(container)
-			.backgroundColor(GLOBE_BG)
+			.backgroundColor(theme.bg)
 			.globeImageUrl('')
 			.showGlobe(true)
 			.showAtmosphere(true)
-			.atmosphereColor('#e0e0e0')
+			.atmosphereColor(theme.atmo)
 			.atmosphereAltitude(0.15)
 			.polygonAltitude(0.006)
-			.polygonSideColor(() => 'rgba(0,0,0,0.05)')
-			.polygonStrokeColor(() => '#fff')
+			.polygonSideColor(() => theme.side)
+			.polygonStrokeColor(() => theme.stroke)
 			.polygonCapColor(d => {
-				if (d.properties.id === selectedId) return HIGHLIGHT_COLOR;
-				return COLORS[d.properties.id % COLORS.length];
+				if (d.properties.id === selectedId) return theme.highlight;
+				return theme.colors[d.properties.id % theme.colors.length];
 			})
 			.polygonLabel(d => d.properties.name)
 			.onPolygonClick(handleCountryClick)
 			.polygonsTransitionDuration(300);
 
-		const globeMaterial = globe.globeMaterial();
-		globeMaterial.color.set('#e8eaed');
-		globeMaterial.emissive.set('#e8eaed');
-		globeMaterial.emissiveIntensity = 0.1;
-		globeMaterial.shininess = 0.3;
+		const mat = globe.globeMaterial();
+		mat.color.set(theme.globe);
+		mat.emissive.set(theme.emissive);
+		mat.emissiveIntensity = theme.emissiveIntensity;
+		mat.shininess = 0.3;
 
 		globe.controls().autoRotate = true;
 		globe.controls().autoRotateSpeed = 0.5;
@@ -214,6 +363,7 @@
 		await loadCountries();
 	}
 
+	/* ─── Data Loading ────────────────────────────────── */
 	async function loadCountries() {
 		try {
 			const resp = await fetch('/countries?limit=300');
@@ -235,6 +385,7 @@
 		}
 	}
 
+	/* ─── Interaction ─────────────────────────────────── */
 	function handleCountryClick(polygon) {
 		if (!polygon) return;
 
@@ -265,6 +416,7 @@
 		return count > 0 ? [sumLng / count, sumLat / count] : [0, 0];
 	}
 
+	/* ─── Sidebar ─────────────────────────────────────── */
 	function openSidebar(props) {
 		document.getElementById('sidebar-name').textContent = props.name;
 		document.getElementById('sidebar-code').textContent = props.code;
@@ -347,6 +499,7 @@
 		loadNeighbors(id);
 	}
 
+	/* ─── Navigation ──────────────────────────────────── */
 	document.querySelector('.navbar-brand').addEventListener('click', function(e) {
 		e.preventDefault();
 		closeSidebar();
