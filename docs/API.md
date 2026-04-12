@@ -53,12 +53,14 @@ DELETE /country/delete/{id}   # Delete country
 ### Web UI
 
 ```
-GET  /web                # Home page
+GET  /web                # 3D globe — click countries to explore
 GET  /web/country/add    # Add country form
 POST /web/country/add    # Submit new country
 GET  /web/upload         # Upload form
 POST /web/upload         # Bulk upload GeoJSON
 ```
+
+All pages support dark mode (toggle in bottom-left corner, persists via localStorage).
 
 ## Sample Input
 

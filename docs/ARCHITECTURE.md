@@ -151,6 +151,31 @@ POST /web/upload  (multipart form with .geojson file)
     → TemplateResponse("upload.html", messages=[...])
 ```
 
+### Globe Interaction (client-side)
+
+```
+Page load (/web):
+  1. Browser loads Globe.GL from CDN
+  2. JS fetches GET /countries?limit=300
+  3. Transforms API response into GeoJSON Features
+  4. Globe.GL renders polygons on 3D sphere
+
+Country click:
+  1. Globe.GL fires onPolygonClick callback
+  2. JS computes centroid, flies camera to country
+  3. JS fetches GET /country/neighbors/{id}
+  4. Sidebar renders country info + clickable neighbor list
+
+Neighbor click:
+  1. Same flow — highlight, fly-to, fetch neighbors, update sidebar
+
+Theme toggle:
+  1. Click dispatches 'themechange' CustomEvent
+  2. base.html script toggles body.dark class + localStorage
+  3. Globe page listener updates WebGL colors (globe material, polygon colors, atmosphere)
+  4. CSS custom properties handle sidebar, navbar, forms, alerts
+```
+
 ## Database
 
 Single table: `countries_country`
@@ -176,6 +201,7 @@ Optional API key authentication, controlled by the `API_KEY` environment variabl
 | Component | Technology |
 |-----------|-----------|
 | Framework | FastAPI 0.124 |
+| 3D Globe | Globe.GL 2.45 (Three.js wrapper, CDN) |
 | ORM | SQLAlchemy 2.0 |
 | Spatial DB | PostGIS (via GeoAlchemy2 0.18) |
 | Geometry | Shapely 2.x |
@@ -186,3 +212,4 @@ Optional API key authentication, controlled by the `API_KEY` environment variabl
 | Container | Docker Compose |
 | Linting | Ruff (pre-commit) |
 | Testing | Pytest with real PostGIS seed data |
+| Theming | CSS custom properties + localStorage |
