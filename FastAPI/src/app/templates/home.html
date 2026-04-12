@@ -1,39 +1,365 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Spatial Data — Globe{% endblock %}
+
+{% block head %}
+<script src="https://unpkg.com/globe.gl@2.35.2/dist/globe.gl.min.js"></script>
+<style>
+	html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
+
+	#globe-container {
+		position: fixed;
+		top: 56px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: #f0f2f5;
+	}
+
+	#sidebar {
+		position: fixed;
+		top: 56px;
+		right: -380px;
+		width: 380px;
+		height: calc(100vh - 56px);
+		background: #fff;
+		box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+		transition: right 0.3s ease;
+		z-index: 999;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+	}
+	#sidebar.open { right: 0; }
+
+	.sidebar-header {
+		padding: 24px 24px 16px;
+		border-bottom: 1px solid #e9ecef;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+	}
+	.sidebar-header h2 {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #212529;
+		line-height: 1.2;
+	}
+	.sidebar-close {
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		color: #6c757d;
+		cursor: pointer;
+		padding: 0;
+		line-height: 1;
+	}
+	.sidebar-close:hover { color: #212529; }
+
+	.sidebar-body { padding: 16px 24px 24px; flex: 1; }
+
+	.country-code {
+		display: inline-block;
+		background: #e9ecef;
+		color: #495057;
+		padding: 2px 10px;
+		border-radius: 4px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 1px;
+		margin-top: 8px;
+	}
+	.country-id {
+		color: #adb5bd;
+		font-size: 0.8rem;
+		margin-top: 4px;
+	}
+
+	.neighbors-section { margin-top: 24px; }
+	.neighbors-section h5 {
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		color: #6c757d;
+		margin-bottom: 12px;
+	}
+
+	.neighbor-item {
+		display: flex;
+		align-items: center;
+		padding: 10px 12px;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background 0.15s;
+		margin-bottom: 2px;
+	}
+	.neighbor-item:hover { background: #f8f9fa; }
+	.neighbor-name { flex: 1; font-weight: 500; color: #212529; }
+	.neighbor-code {
+		font-size: 0.8rem;
+		color: #6c757d;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+	}
+	.neighbor-arrow {
+		margin-left: 8px;
+		color: #adb5bd;
+		font-size: 0.9rem;
+	}
+
+	.neighbors-loading {
+		color: #6c757d;
+		font-style: italic;
+		font-size: 0.9rem;
+	}
+	.no-neighbors {
+		color: #adb5bd;
+		font-size: 0.9rem;
+	}
+
+	#loading-overlay {
+		position: fixed;
+		top: 56px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: #f0f2f5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 998;
+		transition: opacity 0.5s;
+	}
+	#loading-overlay.hidden { opacity: 0; pointer-events: none; }
+	.loading-text {
+		font-size: 1.1rem;
+		color: #6c757d;
+	}
+</style>
+{% endblock %}
+
+{% block body_class %}globe-page{% endblock %}
 
 {% block body %}
-	<div class="container text-center" style="max-width: 1100px; margin: 2rem auto;">
-		<h1>Spatial Data</h1>
-		<p class="lead">Manage and explore country spatial data.</p>
-		<div class="row mt-4">
-			<div class="col-md-4">
-				<div class="card mb-3">
-					<div class="card-body">
-						<h5 class="card-title">API Docs</h5>
-						<p class="card-text">Interactive API documentation.</p>
-						<a href="/docs" class="btn btn-primary">Open Docs</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card mb-3">
-					<div class="card-body">
-						<h5 class="card-title">Add Country</h5>
-						<p class="card-text">Add a new country manually.</p>
-						<a href="/web/country/add" class="btn btn-primary">Add Country</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card mb-3">
-					<div class="card-body">
-						<h5 class="card-title">Bulk Upload</h5>
-						<p class="card-text">Upload a GeoJSON file.</p>
-						<a href="/web/upload" class="btn btn-primary">Upload</a>
-					</div>
-				</div>
-			</div>
+<div id="globe-container"></div>
+
+<div id="loading-overlay">
+	<div class="loading-text">Loading countries...</div>
+</div>
+
+<div id="sidebar">
+	<div class="sidebar-header">
+		<div>
+			<h2 id="sidebar-name"></h2>
+			<div class="country-code" id="sidebar-code"></div>
+			<div class="country-id" id="sidebar-id"></div>
+		</div>
+		<button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+	</div>
+	<div class="sidebar-body">
+		<div class="neighbors-section">
+			<h5>Neighboring Countries</h5>
+			<div id="neighbors-list"></div>
 		</div>
 	</div>
+</div>
+
+<script>
+(function() {
+	const COLORS = [
+		'#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
+		'#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac'
+	];
+	const HIGHLIGHT_COLOR = '#1a1a2e';
+	const GLOBE_BG = '#f0f2f5';
+
+	let globe;
+	let countriesData = [];
+	let selectedId = null;
+
+	async function init() {
+		const container = document.getElementById('globe-container');
+
+		globe = Globe()(container)
+			.backgroundColor(GLOBE_BG)
+			.globeImageUrl('')
+			.showGlobe(true)
+			.showAtmosphere(true)
+			.atmosphereColor('#e0e0e0')
+			.atmosphereAltitude(0.15)
+			.polygonAltitude(0.006)
+			.polygonSideColor(() => 'rgba(0,0,0,0.05)')
+			.polygonStrokeColor(() => '#fff')
+			.polygonCapColor(d => {
+				if (d.properties.id === selectedId) return HIGHLIGHT_COLOR;
+				return COLORS[d.properties.id % COLORS.length];
+			})
+			.polygonLabel(d => d.properties.name)
+			.onPolygonClick(handleCountryClick)
+			.polygonsTransitionDuration(300);
+
+		const globeMaterial = globe.globeMaterial();
+		globeMaterial.color.set('#e8eaed');
+		globeMaterial.emissive.set('#e8eaed');
+		globeMaterial.emissiveIntensity = 0.1;
+		globeMaterial.shininess = 0.3;
+
+		globe.controls().autoRotate = true;
+		globe.controls().autoRotateSpeed = 0.5;
+		globe.controls().addEventListener('start', () => {
+			globe.controls().autoRotate = false;
+		});
+
+		await loadCountries();
+	}
+
+	async function loadCountries() {
+		try {
+			const resp = await fetch('/countries?limit=300');
+			const json = await resp.json();
+			if (!json.success) throw new Error('API error');
+
+			countriesData = json.result;
+			const features = countriesData.map(c => ({
+				type: 'Feature',
+				properties: { id: c.id, name: c.name, code: c.code },
+				geometry: { type: 'MultiPolygon', coordinates: c.coordinates }
+			}));
+
+			globe.polygonsData(features);
+			document.getElementById('loading-overlay').classList.add('hidden');
+		} catch (err) {
+			document.querySelector('.loading-text').textContent =
+				'Failed to load countries. Is the database populated?';
+		}
+	}
+
+	function handleCountryClick(polygon) {
+		if (!polygon) return;
+
+		const props = polygon.properties;
+		selectedId = props.id;
+
+		globe.polygonCapColor(globe.polygonCapColor());
+
+		const centroid = computeCentroid(polygon.geometry.coordinates);
+		globe.pointOfView({ lat: centroid[1], lng: centroid[0], altitude: 1.5 }, 800);
+		globe.controls().autoRotate = false;
+
+		openSidebar(props);
+		loadNeighbors(props.id);
+	}
+
+	function computeCentroid(coordinates) {
+		let sumLng = 0, sumLat = 0, count = 0;
+		for (const polygon of coordinates) {
+			for (const ring of polygon) {
+				for (const point of ring) {
+					sumLng += point[0];
+					sumLat += point[1];
+					count++;
+				}
+			}
+		}
+		return count > 0 ? [sumLng / count, sumLat / count] : [0, 0];
+	}
+
+	function openSidebar(props) {
+		document.getElementById('sidebar-name').textContent = props.name;
+		document.getElementById('sidebar-code').textContent = props.code;
+		document.getElementById('sidebar-id').textContent = 'ID: ' + props.id;
+		document.getElementById('sidebar').classList.add('open');
+	}
+
+	function closeSidebar() {
+		document.getElementById('sidebar').classList.remove('open');
+		selectedId = null;
+		globe.polygonCapColor(globe.polygonCapColor());
+	}
+	window.closeSidebar = closeSidebar;
+
+	async function loadNeighbors(countryId) {
+		const list = document.getElementById('neighbors-list');
+		list.textContent = '';
+		const loadingEl = document.createElement('div');
+		loadingEl.className = 'neighbors-loading';
+		loadingEl.textContent = 'Loading neighbors...';
+		list.appendChild(loadingEl);
+
+		try {
+			const resp = await fetch('/country/neighbors/' + countryId);
+			const json = await resp.json();
+
+			list.textContent = '';
+
+			if (!json.success || json.result.length === 0) {
+				const empty = document.createElement('div');
+				empty.className = 'no-neighbors';
+				empty.textContent = 'No neighboring countries found';
+				list.appendChild(empty);
+				return;
+			}
+
+			json.result.forEach(n => {
+				const item = document.createElement('div');
+				item.className = 'neighbor-item';
+				item.addEventListener('click', () => flyToCountry(n.id, n.name, n.code));
+
+				const nameSpan = document.createElement('span');
+				nameSpan.className = 'neighbor-name';
+				nameSpan.textContent = n.name;
+
+				const codeSpan = document.createElement('span');
+				codeSpan.className = 'neighbor-code';
+				codeSpan.textContent = n.code;
+
+				const arrow = document.createElement('span');
+				arrow.className = 'neighbor-arrow';
+				arrow.textContent = '\u2192';
+
+				item.appendChild(nameSpan);
+				item.appendChild(codeSpan);
+				item.appendChild(arrow);
+				list.appendChild(item);
+			});
+		} catch {
+			list.textContent = '';
+			const errEl = document.createElement('div');
+			errEl.className = 'no-neighbors';
+			errEl.textContent = 'Failed to load neighbors';
+			list.appendChild(errEl);
+		}
+	}
+
+	function flyToCountry(id, name, code) {
+		const features = globe.polygonsData();
+		const target = features.find(f => f.properties.id === id);
+		if (!target) return;
+
+		selectedId = id;
+		globe.polygonCapColor(globe.polygonCapColor());
+
+		const centroid = computeCentroid(target.geometry.coordinates);
+		globe.pointOfView({ lat: centroid[1], lng: centroid[0], altitude: 1.5 }, 800);
+
+		openSidebar({ id, name, code });
+		loadNeighbors(id);
+	}
+
+	document.querySelector('.navbar-brand').addEventListener('click', function(e) {
+		e.preventDefault();
+		closeSidebar();
+		globe.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 1000);
+		globe.controls().autoRotate = true;
+	});
+
+	window.addEventListener('resize', () => {
+		globe.width(window.innerWidth);
+		globe.height(window.innerHeight - 56);
+	});
+
+	init();
+})();
+</script>
 {% endblock %}
