@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Upload{% endblock %}
+
+{% block body %}
+	<div class="container text-center" style="max-width: 1100px; margin: 2rem auto;">
+		<h2>Upload GeoJSON</h2>
+
+		{% for msg in messages %}
+		<div class="alert alert-{{ 'danger' if msg.type == 'error' else 'success' }} alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			{{ msg.text }}
+		</div>
+		{% endfor %}
+
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<form method="POST" action="/web/upload" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="geojson_file" class="col-sm-3 col-form-label">GeoJSON File</label>
+						<div class="col-sm-9">
+							<input type="file" class="form-control-file" id="geojson_file" name="geojson_file" accept=".geojson,.json" required>
+						</div>
+					</div>
+					<div class="row m-3">
+						<div class="col-md-6">
+							<button type="reset" class="btn btn-outline-warning btn-lg btn-block">Reset</button>
+						</div>
+						<div class="col-md-6">
+							<button type="submit" class="btn btn-outline-success btn-lg btn-block">Upload</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

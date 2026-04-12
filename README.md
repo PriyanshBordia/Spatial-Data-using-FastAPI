@@ -1,92 +1,171 @@
 # Spatial Data using FastAPI
 
+A geospatial REST API and web interface for managing country boundary data, built with FastAPI, PostGIS, SQLAlchemy, and GeoAlchemy2.
 
-## Setup
+## Features
 
-### Clone repository to local machine:
+- REST API with CRUD operations for country geometries
+- Spatial neighbor queries (find countries that share borders)
+- Search by name, ISO code, or partial name match
+- Paginated listing of all countries
+- Web UI for adding countries and bulk-uploading GeoJSON files
+- API key authentication for write operations
+- Interactive API docs at `/docs`
+
+## Quick Start
 
 ```shell
-gh repo clone PriyanshBordia/Spatial-Data-using-FastAPI
+git clone https://github.com/PriyanshBordia/Spatial-Data-using-FastAPI.git
 cd Spatial-Data-using-FastAPI
+docker compose up -d --build
 ```
 
-### Set env vars
+This starts **PostGIS** on port 5432 and **FastAPI** on port 8002.
+
+Seed the database with 239 country boundaries:
 
 ```shell
-export SECRET_KEY=""
-export DEBUG=True               # Set to false in case you want to replicate production env
-export DB_NAME=[DB_NAME]
-export DB_USERNAME=[DB_USERNAME]
-export DB_PASSWORD=[DB_PASSWORD]
-export DB_PORT=5432
-export DB_HOST=[DB_HOST]
+curl http://localhost:8002/populate_data
 ```
 
-### Create Virtual Env
+Browse the interactive API docs at **http://localhost:8002/docs**
+
+## API Endpoints
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/` | | Health check |
+| GET | `/populate_data` | | Seed database from bundled GeoJSON |
+| GET | `/country/id/{id}` | | Get country by ID |
+| GET | `/country/code/{code}` | | Get country by ISO A3 code |
+| GET | `/country/name/{name}` | | Get country by exact name |
+| GET | `/country/name/contains/{name}` | | Search countries by name |
+| GET | `/countries?skip=0&limit=100` | | List countries (paginated) |
+| GET | `/country/neighbors/{id}` | | Find bordering countries |
+| POST | `/country/create/` | API Key | Create a country |
+| PUT | `/country/update/{id}` | API Key | Update a country |
+| DELETE | `/country/delete/{id}` | API Key | Delete a country |
+
+### Web UI
+
+| URL | Description |
+|-----|-------------|
+| `/web` | Home page |
+| `/web/country/add` | Add a country via form |
+| `/web/upload` | Bulk upload GeoJSON file |
+
+### Sample Request
 
 ```shell
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+curl -X POST http://localhost:8002/country/create/ \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: your-key" \
+  -d '{
+    "admin": "Wakanda",
+    "iso_a3": "WKA",
+    "geom": {
+      "type": "Polygon",
+      "coordinates": [[[30, -1], [30, 1], [32, 1], [32, -1], [30, -1]]]
+    }
+  }'
 ```
 
-### Docker Steps
+Polygon geometries are automatically promoted to MultiPolygon.
 
-```shell
-docker login # Add credentials to prompt
-cd FastAPI
-docker-compose -p spatial_data up -d --build
-```
-
-### URL
-
-```text
-http://localhost:8002/docs
-```
-
-### Push image to Hub
-
-```shell
-docker build -t [image_name] .
-docker tag [image_name]:[tag_name] [docker_username]:[repo]
-docker push [docker_username]/[repo]
-```
-
-### Populate data to db
-
-```shell
-ogr2ogr -f "PostgreSQL" PG:"dbname=[db_name] user=[username] password=[password]" countries.geojson -nln data/geo-countries/archive/spatial_data
-```
-
-#### Sample Input 
+### Sample Response
 
 ```json
 {
-  "admin": "Wakanda",
-  "iso_a3": "WKA",
-  "geom": {"type": "Polygon", "coordinates": [ [ [ -69.996937628999916, 12.577582098000036 ], [ -69.936390753999945, 12.531724351000051 ], [ -69.924672003999945, 12.519232489000046 ], [ -69.915760870999918, 12.497015692000076 ], [ -69.880197719999842, 12.453558661000045 ], [ -69.876820441999939, 12.427394924000097 ], [ -69.888091600999928, 12.417669989000046 ], [ -69.908802863999938, 12.417792059000107 ], [ -69.930531378999888, 12.425970770000035 ], [ -69.945139126999919, 12.44037506700009 ], [ -69.924672003999945, 12.44037506700009 ], [ -69.924672003999945, 12.447211005000014 ], [ -69.958566860999923, 12.463202216000099 ], [ -70.027658657999922, 12.522935289000088 ], [ -70.048085089999887, 12.531154690000079 ], [ -70.058094855999883, 12.537176825000088 ], [ -70.062408006999874, 12.546820380000057 ], [ -70.060373501999948, 12.556952216000113 ], [ -70.051096157999893, 12.574042059000064 ], [ -70.048736131999931, 12.583726304000024 ], [ -70.052642381999931, 12.600002346000053 ], [ -70.059641079999921, 12.614243882000054 ], [ -70.061105923999975, 12.625392971000068 ], [ -70.048736131999931, 12.632147528000104 ], [ -70.00715084499987, 12.5855166690001 ], [ -69.996937628999916, 12.577582098000036 ] ] ] }
+  "success": true,
+  "message": "Country inserted successfully.",
+  "meta": { "size": 1 },
+  "result": [
+    { "id": 240, "name": "Wakanda", "code": "WKA", "coordinates": [...] }
+  ]
 }
 ```
 
-### Run Tests Manually
+## Environment Variables
 
-```shell
-cd FastAPI
-pytest src/tests/tests.py
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DB_NAME` | PostgreSQL database name | (required) |
+| `DB_USERNAME` | PostgreSQL username | (required) |
+| `DB_PASSWORD` | PostgreSQL password | (required) |
+| `DB_HOST` | PostgreSQL host | (required) |
+| `DB_PORT` | PostgreSQL port | `5432` |
+| `API_KEY` | API key for write endpoints | `""` (disabled) |
+
+When `API_KEY` is set, `POST`, `PUT`, and `DELETE` endpoints require the `X-API-Key` header.
+
+## Project Structure
+
+```
+FastAPI/src/app/
+  main.py                 # App assembly
+  config.py               # Settings from env vars
+  core/
+    exceptions.py         # Domain exceptions
+    geometry.py           # Geometry normalization (Polygon -> MultiPolygon)
+    dependencies.py       # FastAPI dependencies (DB session, API key auth)
+  db/
+    engine.py             # SQLAlchemy engine + session
+    models.py             # Country ORM model
+    schemas.py            # Pydantic schemas (input + response)
+  services/
+    country.py            # Business logic (CRUD, spatial queries, data loading)
+  routes/
+    api.py                # JSON API endpoints
+    web.py                # HTML web UI endpoints
+  templates/              # Jinja2 templates
+  data/
+    countries.geojson     # Seed data (255 countries)
+  tests/
+    conftest.py           # Pytest fixtures with seed data
+    tests.py              # 38 integration tests
 ```
 
-#### ALIAS
+See [Architecture](docs/ARCHITECTURE.md) for layer diagrams and data flow traces.
 
-- image_name = `spatial-data`
-- tag_name = unique name given to an build (you can use `latest`)
-- username = PostgreSQL account username
-- password = PostgreSQL account password
+## Running Tests
 
+```shell
+docker compose exec fastapi python3 -m pytest app/tests/ -v
+```
 
-#### References
+Tests use real PostGIS seed data (no mocks). Fixtures create and destroy test countries in setup/teardown.
 
-- [FastAPI](https://www.fastapitutorial.com/)
+## Development
+
+### Pre-commit Hooks
+
+```shell
+pip install pre-commit
+pre-commit install
+```
+
+Runs [ruff](https://docs.astral.sh/ruff/) lint + format on every commit.
+
+### Local Development (without Docker)
+
+Requires PostgreSQL with PostGIS, GDAL, and GEOS installed locally.
+
+```shell
+cd FastAPI/src
+pip install -r requirements.txt
+export DB_NAME=spatial_data DB_USERNAME=postgres DB_PASSWORD=postgres DB_HOST=localhost DB_PORT=5432
+uvicorn app.main:app --reload --port 8000
+```
+
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md) — Layer diagram, data flows, DB schema, tech stack
+- [Design Decisions](docs/DESIGN.md) — Key choices with context, alternatives, and trade-offs
+- [API Reference](docs/API.md) — Endpoint listing, request/response examples
+
+## References
+
+- [FastAPI](https://fastapi.tiangolo.com/)
 - [PostGIS](http://postgis.net/)
-- [Docker](https://testdriven.io/blog/fastapi-crud/)
-- [GitHub](https://github.com/nofoobar/JobBoard-Fastapi/blob/main/backend/tests/conftest.py)
-
+- [GeoAlchemy2](https://geoalchemy-2.readthedocs.io/)
+- [Shapely](https://shapely.readthedocs.io/)

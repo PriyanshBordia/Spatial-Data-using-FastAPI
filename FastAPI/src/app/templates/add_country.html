@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Add Country{% endblock %}
+
+{% block body %}
+	<div class="container text-center" style="max-width: 1100px; margin: 2rem auto;">
+		<h2>Add Country</h2>
+
+		{% for error in errors %}
+		<div class="alert alert-danger alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			{{ error }}
+		</div>
+		{% endfor %}
+
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<form method="POST" action="/web/country/add">
+					<div class="form-group row">
+						<label for="admin" class="col-sm-3 col-form-label">Country Name</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="admin" name="admin" value="{{ admin }}" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="iso_a3" class="col-sm-3 col-form-label">ISO A3 Code</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="iso_a3" name="iso_a3" value="{{ iso_a3 }}" maxlength="3" required>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="geom" class="col-sm-3 col-form-label">Geometry (GeoJSON)</label>
+						<div class="col-sm-9">
+							<textarea class="form-control" id="geom" name="geom" rows="5" required>{{ geom }}</textarea>
+							<small class="form-text text-muted">Paste a GeoJSON Polygon or MultiPolygon geometry.</small>
+						</div>
+					</div>
+					<div class="row m-3">
+						<div class="col-md-6">
+							<button type="reset" class="btn btn-outline-warning btn-lg btn-block">Reset</button>
+						</div>
+						<div class="col-md-6">
+							<button type="submit" class="btn btn-outline-success btn-lg btn-block">Add</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

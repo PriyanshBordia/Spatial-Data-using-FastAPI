@@ -1,15 +1,6 @@
-<!-- countries/home.html -->
 {% extends "base.html" %}
 
-{% block title %}
-	Home
-{% endblock %}
-
-{% block head %}
-	{% load static %}
-	{% load bootstrap4 %}
-	{% load fontawesome_5 %}
-{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
 	<div class="container text-center" style="max-width: 1100px; margin: 2rem auto;">
@@ -19,9 +10,9 @@
 			<div class="col-md-4">
 				<div class="card mb-3">
 					<div class="card-body">
-						<h5 class="card-title">Admin Panel</h5>
-						<p class="card-text">View and manage all countries.</p>
-						<a href="{% url 'admin:countries_country_changelist' %}" class="btn btn-primary">Open Admin</a>
+						<h5 class="card-title">API Docs</h5>
+						<p class="card-text">Interactive API documentation.</p>
+						<a href="/docs" class="btn btn-primary">Open Docs</a>
 					</div>
 				</div>
 			</div>
@@ -30,7 +21,7 @@
 					<div class="card-body">
 						<h5 class="card-title">Add Country</h5>
 						<p class="card-text">Add a new country manually.</p>
-						<a href="{% url 'admin:countries_country_add' %}" class="btn btn-primary">Add Country</a>
+						<a href="/web/country/add" class="btn btn-primary">Add Country</a>
 					</div>
 				</div>
 			</div>
@@ -39,7 +30,7 @@
 					<div class="card-body">
 						<h5 class="card-title">Bulk Upload</h5>
 						<p class="card-text">Upload a GeoJSON file.</p>
-						<a href="{% url 'upload' %}" class="btn btn-primary">Upload</a>
+						<a href="/web/upload" class="btn btn-primary">Upload</a>
 					</div>
 				</div>
 			</div>

@@ -8,7 +8,7 @@ ENV DB_NAME=spatial_data
 ENV DB_USERNAME=postgres
 ENV DB_PASSWORD=postgres
 ENV DB_PORT=5432
-ENV DB_HOST=database
+ENV DB_HOST=db
 
 COPY ./requirements.txt /usr/src/app/requirements.txt
 
