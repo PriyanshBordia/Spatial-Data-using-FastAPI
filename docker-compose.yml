@@ -6,15 +6,14 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     expose:
       - 5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=spatial_data
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   fastapi:
     container_name: fastapi_app
@@ -23,16 +22,13 @@ services:
     volumes:
       - ./FastAPI/src/:/usr/src/app/
     ports:
-      - 8002:8000
-    environment:
-      - DB_NAME=spatial_data
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-      - DB_PORT=5432
-      - DB_HOST=db
+      - "8002:8000"
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   postgres_data:
