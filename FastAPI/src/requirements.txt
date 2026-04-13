@@ -1,5 +1,5 @@
 fastapi==0.124.0
-GeoAlchemy2==0.18.0
+GeoAlchemy2==0.18.4
 geojson==3.2.0
 psycopg2-binary==2.9.10
 pydantic==2.12.3
