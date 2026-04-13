@@ -4,6 +4,10 @@ A geospatial REST API and web interface for managing country boundary data, buil
 
 ## Features
 
+- Interactive 3D globe with clickable country boundaries (Globe.GL)
+- Click a country to see details and neighbors in a sidebar
+- Navigate between neighbors by clicking through the sidebar list
+- Dark mode toggle with localStorage persistence
 - REST API with CRUD operations for country geometries
 - Spatial neighbor queries (find countries that share borders)
 - Search by name, ISO code, or partial name match
@@ -50,9 +54,11 @@ Browse the interactive API docs at **http://localhost:8002/docs**
 
 | URL | Description |
 |-----|-------------|
-| `/web` | Home page |
+| `/web` | 3D globe — click countries to explore |
 | `/web/country/add` | Add a country via form |
 | `/web/upload` | Bulk upload GeoJSON file |
+
+All pages support dark mode via the toggle button (bottom-left).
 
 ### Sample Request
 

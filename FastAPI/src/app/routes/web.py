@@ -12,7 +12,7 @@ from ..db import schemas
 from ..services import country as country_service
 
 router = APIRouter()
-templates = Jinja2Templates(directory="src/app/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/web", response_class=HTMLResponse, name="web_home")

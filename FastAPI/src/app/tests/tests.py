@@ -235,7 +235,7 @@ def test_create_country_invalid_geom(client, seed_countries):
 def test_create_country_polygon_auto_converts(client, seed_countries, db):
 	payload = {
 		"admin": "Polyconvert",
-		"iso_a3": "PCN",
+		"iso_a3": "ZPC",
 		"geom": {"type": "Polygon", "coordinates": [[[7, 7], [7, 8], [8, 8], [8, 7], [7, 7]]]},
 	}
 	data = client.post("/country/create/", json=payload).json()

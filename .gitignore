@@ -163,3 +163,4 @@ alembic
 .markdownlint.yaml
 .shellcheckrc
 .trunk/
+/.claude

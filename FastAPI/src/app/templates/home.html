@@ -1,39 +1,394 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Spatial Data — Globe{% endblock %}
+
+{% block head %}
+<script src="https://unpkg.com/globe.gl@2.45.3/dist/globe.gl.min.js"></script>
+<style>
+	html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
+
+	#globe-container {
+		position: fixed;
+		top: 56px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: var(--bg);
+	}
+
+	/* ─── Sidebar ─────────────────────────────────────────── */
+	#sidebar {
+		position: fixed;
+		top: 56px;
+		right: -380px;
+		width: 380px;
+		height: calc(100vh - 56px);
+		background: var(--card-bg, #fff);
+		box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+		transition: right 0.3s ease, background 0.3s;
+		z-index: 999;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+	}
+	body.dark #sidebar { box-shadow: -4px 0 20px rgba(0,0,0,0.5); }
+	#sidebar.open { right: 0; }
+
+	.sidebar-header {
+		padding: 24px 24px 16px;
+		border-bottom: 1px solid var(--border-color);
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+	}
+	.sidebar-header h2 {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		line-height: 1.2;
+	}
+	.sidebar-close {
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		color: var(--text-secondary);
+		cursor: pointer;
+		padding: 0;
+		line-height: 1;
+	}
+	.sidebar-close:hover { color: var(--text-primary); }
+
+	.sidebar-body { padding: 16px 24px 24px; flex: 1; }
+
+	.country-code {
+		display: inline-block;
+		background: var(--badge-bg);
+		color: var(--badge-text);
+		padding: 2px 10px;
+		border-radius: 4px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 1px;
+		margin-top: 8px;
+	}
+	.country-id {
+		color: var(--text-muted);
+		font-size: 0.8rem;
+		margin-top: 4px;
+	}
+
+	.neighbors-section { margin-top: 24px; }
+	.neighbors-section h5 {
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		color: var(--text-secondary);
+		margin-bottom: 12px;
+	}
+
+	.neighbor-item {
+		display: flex;
+		align-items: center;
+		padding: 10px 12px;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background 0.15s;
+		margin-bottom: 2px;
+	}
+	.neighbor-item:hover { background: var(--hover-bg); }
+	.neighbor-name { flex: 1; font-weight: 500; color: var(--text-primary); }
+	.neighbor-code {
+		font-size: 0.8rem;
+		color: var(--text-secondary);
+		font-weight: 600;
+		letter-spacing: 0.5px;
+	}
+	.neighbor-arrow {
+		margin-left: 8px;
+		color: var(--text-muted);
+		font-size: 0.9rem;
+	}
+
+	.neighbors-loading { color: var(--text-secondary); font-style: italic; font-size: 0.9rem; }
+	.no-neighbors { color: var(--text-muted); font-size: 0.9rem; }
+
+	#loading-overlay {
+		position: fixed;
+		top: 56px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: var(--bg);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 998;
+		transition: opacity 0.5s;
+	}
+	#loading-overlay.hidden { opacity: 0; pointer-events: none; }
+	.loading-text { font-size: 1.1rem; color: var(--text-secondary); }
+</style>
+{% endblock %}
+
+{% block body_class %}globe-page{% endblock %}
 
 {% block body %}
-	<div class="container text-center" style="max-width: 1100px; margin: 2rem auto;">
-		<h1>Spatial Data</h1>
-		<p class="lead">Manage and explore country spatial data.</p>
-		<div class="row mt-4">
-			<div class="col-md-4">
-				<div class="card mb-3">
-					<div class="card-body">
-						<h5 class="card-title">API Docs</h5>
-						<p class="card-text">Interactive API documentation.</p>
-						<a href="/docs" class="btn btn-primary">Open Docs</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card mb-3">
-					<div class="card-body">
-						<h5 class="card-title">Add Country</h5>
-						<p class="card-text">Add a new country manually.</p>
-						<a href="/web/country/add" class="btn btn-primary">Add Country</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card mb-3">
-					<div class="card-body">
-						<h5 class="card-title">Bulk Upload</h5>
-						<p class="card-text">Upload a GeoJSON file.</p>
-						<a href="/web/upload" class="btn btn-primary">Upload</a>
-					</div>
-				</div>
-			</div>
+<div id="globe-container"></div>
+
+<div id="loading-overlay">
+	<div class="loading-text">Loading countries...</div>
+</div>
+
+<div id="sidebar">
+	<div class="sidebar-header">
+		<div>
+			<h2 id="sidebar-name"></h2>
+			<div class="country-code" id="sidebar-code"></div>
+			<div class="country-id" id="sidebar-id"></div>
+		</div>
+		<button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+	</div>
+	<div class="sidebar-body">
+		<div class="neighbors-section">
+			<h5>Neighboring Countries</h5>
+			<div id="neighbors-list"></div>
 		</div>
 	</div>
+</div>
+
+<script>
+(function() {
+	/* ─── Theme Palettes ──────────────────────────────── */
+	var LIGHT = {
+		colors: ['#4e79a7','#f28e2b','#e15759','#76b7b2','#59a14f','#edc948','#b07aa1','#ff9da7','#9c755f','#bab0ac'],
+		highlight: '#1a1a2e',
+		bg: '#f0f2f5',
+		globe: '#e8eaed',
+		emissive: '#e8eaed',
+		emissiveIntensity: 0.1,
+		atmo: '#e0e0e0',
+		stroke: '#fff',
+		side: 'rgba(0,0,0,0.05)'
+	};
+	var DARK = {
+		colors: ['#5b9bd5','#ff8c42','#ff6b6b','#6bcfcf','#7bc67e','#ffd93d','#c98bdb','#ff7eb3','#d4a373','#8ecae6'],
+		highlight: '#e2b714',
+		bg: '#0a0a1a',
+		globe: '#1a1a2e',
+		emissive: '#0d0d1a',
+		emissiveIntensity: 0.05,
+		atmo: '#2a2a4a',
+		stroke: 'rgba(255,255,255,0.15)',
+		side: 'rgba(255,255,255,0.03)'
+	};
+
+	var isDark = document.body.classList.contains('dark');
+	var theme = isDark ? DARK : LIGHT;
+	var globe;
+	var selectedId = null;
+
+	function applyGlobeTheme() {
+		if (!globe) return;
+		theme = document.body.classList.contains('dark') ? DARK : LIGHT;
+
+		globe.backgroundColor(theme.bg)
+			.atmosphereColor(theme.atmo)
+			.polygonStrokeColor(function() { return theme.stroke; })
+			.polygonSideColor(function() { return theme.side; })
+			.polygonCapColor(function(d) {
+				if (d.properties.id === selectedId) return theme.highlight;
+				return theme.colors[d.properties.id % theme.colors.length];
+			});
+
+		var mat = globe.globeMaterial();
+		mat.color.set(theme.globe);
+		mat.emissive.set(theme.emissive);
+		mat.emissiveIntensity = theme.emissiveIntensity;
+	}
+
+	// Listen for theme toggle from base.html
+	window.addEventListener('themechange', applyGlobeTheme);
+
+	/* ─── Globe Init ──────────────────────────────────── */
+	function init() {
+		var container = document.getElementById('globe-container');
+
+		globe = Globe()(container)
+			.backgroundColor(theme.bg)
+			.globeImageUrl('')
+			.showGlobe(true)
+			.showAtmosphere(true)
+			.atmosphereColor(theme.atmo)
+			.atmosphereAltitude(0.15)
+			.polygonAltitude(0.006)
+			.polygonSideColor(function() { return theme.side; })
+			.polygonStrokeColor(function() { return theme.stroke; })
+			.polygonCapColor(function(d) {
+				if (d.properties.id === selectedId) return theme.highlight;
+				return theme.colors[d.properties.id % theme.colors.length];
+			})
+			.polygonLabel(function(d) { return d.properties.name; })
+			.onPolygonClick(handleCountryClick)
+			.polygonsTransitionDuration(300);
+
+		var mat = globe.globeMaterial();
+		mat.color.set(theme.globe);
+		mat.emissive.set(theme.emissive);
+		mat.emissiveIntensity = theme.emissiveIntensity;
+		mat.shininess = 0.3;
+
+		globe.controls().autoRotate = true;
+		globe.controls().autoRotateSpeed = 0.5;
+		globe.controls().addEventListener('start', function() {
+			globe.controls().autoRotate = false;
+		});
+
+		loadCountries();
+	}
+
+	function loadCountries() {
+		fetch('/countries?limit=300')
+			.then(function(r) { return r.json(); })
+			.then(function(json) {
+				if (!json.success) throw new Error('API error');
+				var features = json.result.map(function(c) {
+					return {
+						type: 'Feature',
+						properties: { id: c.id, name: c.name, code: c.code },
+						geometry: { type: 'MultiPolygon', coordinates: c.coordinates }
+					};
+				});
+				globe.polygonsData(features);
+				document.getElementById('loading-overlay').classList.add('hidden');
+			})
+			.catch(function() {
+				document.querySelector('.loading-text').textContent =
+					'Failed to load countries. Is the database populated?';
+			});
+	}
+
+	/* ─── Interaction ─────────────────────────────────── */
+	function handleCountryClick(polygon) {
+		if (!polygon) return;
+		var props = polygon.properties;
+		selectedId = props.id;
+		globe.polygonCapColor(globe.polygonCapColor());
+
+		var centroid = computeCentroid(polygon.geometry.coordinates);
+		globe.pointOfView({ lat: centroid[1], lng: centroid[0], altitude: 1.5 }, 800);
+		globe.controls().autoRotate = false;
+
+		openSidebar(props);
+		loadNeighbors(props.id);
+	}
+
+	function computeCentroid(coordinates) {
+		var sumLng = 0, sumLat = 0, count = 0;
+		coordinates.forEach(function(polygon) {
+			polygon.forEach(function(ring) {
+				ring.forEach(function(point) {
+					sumLng += point[0];
+					sumLat += point[1];
+					count++;
+				});
+			});
+		});
+		return count > 0 ? [sumLng / count, sumLat / count] : [0, 0];
+	}
+
+	/* ─── Sidebar ─────────────────────────────────────── */
+	function openSidebar(props) {
+		document.getElementById('sidebar-name').textContent = props.name;
+		document.getElementById('sidebar-code').textContent = props.code;
+		document.getElementById('sidebar-id').textContent = 'ID: ' + props.id;
+		document.getElementById('sidebar').classList.add('open');
+	}
+
+	function closeSidebar() {
+		document.getElementById('sidebar').classList.remove('open');
+		selectedId = null;
+		globe.polygonCapColor(globe.polygonCapColor());
+	}
+	window.closeSidebar = closeSidebar;
+
+	function loadNeighbors(countryId) {
+		var list = document.getElementById('neighbors-list');
+		list.textContent = '';
+		var loadingEl = document.createElement('div');
+		loadingEl.className = 'neighbors-loading';
+		loadingEl.textContent = 'Loading neighbors...';
+		list.appendChild(loadingEl);
+
+		fetch('/country/neighbors/' + countryId)
+			.then(function(r) { return r.json(); })
+			.then(function(json) {
+				list.textContent = '';
+				if (!json.success || json.result.length === 0) {
+					var empty = document.createElement('div');
+					empty.className = 'no-neighbors';
+					empty.textContent = 'No neighboring countries found';
+					list.appendChild(empty);
+					return;
+				}
+				json.result.forEach(function(n) {
+					var item = document.createElement('div');
+					item.className = 'neighbor-item';
+					item.addEventListener('click', function() { flyToCountry(n.id, n.name, n.code); });
+
+					var nameSpan = document.createElement('span');
+					nameSpan.className = 'neighbor-name';
+					nameSpan.textContent = n.name;
+
+					var codeSpan = document.createElement('span');
+					codeSpan.className = 'neighbor-code';
+					codeSpan.textContent = n.code;
+
+					var arrow = document.createElement('span');
+					arrow.className = 'neighbor-arrow';
+					arrow.textContent = '\u2192';
+
+					item.appendChild(nameSpan);
+					item.appendChild(codeSpan);
+					item.appendChild(arrow);
+					list.appendChild(item);
+				});
+			})
+			.catch(function() {
+				list.textContent = '';
+				var errEl = document.createElement('div');
+				errEl.className = 'no-neighbors';
+				errEl.textContent = 'Failed to load neighbors';
+				list.appendChild(errEl);
+			});
+	}
+
+	function flyToCountry(id, name, code) {
+		var features = globe.polygonsData();
+		var target = features.find(function(f) { return f.properties.id === id; });
+		if (!target) return;
+		selectedId = id;
+		globe.polygonCapColor(globe.polygonCapColor());
+		var centroid = computeCentroid(target.geometry.coordinates);
+		globe.pointOfView({ lat: centroid[1], lng: centroid[0], altitude: 1.5 }, 800);
+		openSidebar({ id: id, name: name, code: code });
+		loadNeighbors(id);
+	}
+
+	/* ─── Navigation ──────────────────────────────────── */
+	document.querySelector('.navbar-brand').addEventListener('click', function(e) {
+		e.preventDefault();
+		closeSidebar();
+		globe.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 1000);
+		globe.controls().autoRotate = true;
+	});
+
+	window.addEventListener('resize', function() {
+		globe.width(window.innerWidth);
+		globe.height(window.innerHeight - 56);
+	});
+
+	init();
+})();
+</script>
 {% endblock %}
